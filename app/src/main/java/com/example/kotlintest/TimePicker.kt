@@ -29,8 +29,8 @@ class TimePicker : BottomSheetDialogFragment() {
         val tp = view.findViewById<TimePicker>(R.id.timePicker)
 
         ok.setOnClickListener {
-            val timeSelected = tp.hour.toString()+" : "+tp.minute.toString()
-            listener?.onTimeSelected(timeSelected)
+            listener?.onTimeSelected(tp.hour.toString(), tp.minute.toString())
+
             dismiss()
         }
         cancle.setOnClickListener {

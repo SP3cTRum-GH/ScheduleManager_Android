@@ -1,5 +1,5 @@
 package com.example.kotlintest
 
 interface TimePickerListener {
-    fun onTimeSelected(time: String)
+    fun onTimeSelected(hour: String, minute: String)
 }
