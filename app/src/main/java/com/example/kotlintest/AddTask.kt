@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -14,7 +15,6 @@ class AddTask : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View? {
         // Inflate the layout for this fragment
         val selectedDateStr = arguments?.getString("date") ?: "" // 문자열로부터 날짜 문자열 가져옴
@@ -29,29 +29,16 @@ class AddTask : BottomSheetDialogFragment() {
         // DAO 초기화
         val calDao = db.calDao()
 
-        btnStart.setOnClickListener{
-            val tp = TimePicker()
-            tp.setListener(
-                object: TimePickerListener {
-                    override fun onTimeSelected(hour: String, minute: String) {
-                        var start = SelectTime(hour, minute)
-                        btnStart.setText(start.hour +" : " +start.minute)
-                    }
-                }
-            )
-            tp.show(parentFragmentManager,"time Picker")
+        val tp = TimePicker(btnStart, btnEnd)
 
-        }//종료시간 시작시간보다 앞으로 갈수 없게끔 수정할 것
+        btnStart.setOnClickListener {
+            tp.setFlag(true)
+            tp.show(parentFragmentManager,"time Picker")
+        }
+
+        //종료시간 시작시간보다 앞으로 갈수 없게끔 수정할 것
         btnEnd.setOnClickListener {
-            val tp = TimePicker()
-            tp.setListener(
-                object: TimePickerListener {
-                    override fun onTimeSelected(hour: String, minute: String) {
-                        var end = SelectTime(hour, minute)
-                        btnEnd.setText(end.hour +" : " +end.minute)
-                    }
-                }
-            )
+            tp.setFlag(false)
             tp.show(parentFragmentManager,"time Picker")
         }
 
