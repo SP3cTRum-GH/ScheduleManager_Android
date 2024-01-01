@@ -16,11 +16,13 @@ import java.time.format.DateTimeFormatter
 class TimePicker() : BottomSheetDialogFragment() {
     private var startBtn: Button? = null
     private var endBtn: Button? = null
+    private var startTime: String = ""
+    private var endTime: String = ""
     private var isStart = true
 
     constructor(startBtn: Button?, endBtn: Button?) : this() {
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("hh : mm")
+        val formatter = DateTimeFormatter.ofPattern("HH : mm")
         val formatted = current.format(formatter)
         val endformatted = current.plusHours(1).format(formatter)
 
@@ -33,6 +35,13 @@ class TimePicker() : BottomSheetDialogFragment() {
 
     fun setFlag(isStart: Boolean) {
         this.isStart = isStart
+    }
+
+    fun getStartTime():String{
+        return startTime
+    }
+    fun getEndTime():String{
+        return endTime
     }
 
     override fun onCreateView(
@@ -53,9 +62,13 @@ class TimePicker() : BottomSheetDialogFragment() {
 
         ok.setOnClickListener {
             if(isStart) {
-                this.startBtn?.setText(tp.hour.toString() +" : " +tp.minute.toString())
+                this.startTime = tp.hour.toString() +" : " +tp.minute.toString()
+                this.startBtn?.setText(startTime)
+                this.endTime = tp.hour.plus(1).toString() + " : " +tp.minute.toString()
+                this.endBtn?.setText(endTime)
             } else {
-                this.endBtn?.setText(tp.hour.toString() +" : " +tp.minute.toString())
+                this.endTime = tp.hour.toString() +" : " +tp.minute.toString()
+                this.endBtn?.setText(endTime)
             }
 
             dismiss()

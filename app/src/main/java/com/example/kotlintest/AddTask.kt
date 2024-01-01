@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,7 +47,13 @@ class AddTask : BottomSheetDialogFragment() {
         }
 
         btnSave.setOnClickListener {
-            val task = Calendar_DTO(date= "" , task = txtTask.text.toString(), endtime = "", starttime = "" )
+            val task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime())
+            CoroutineScope(Dispatchers.Main).launch {
+                val res = async(Dispatchers.IO) {
+                    calDao.insertTaskForDate(task)
+                }
+                println(res)
+            }
             dismiss()
         }
         return view
