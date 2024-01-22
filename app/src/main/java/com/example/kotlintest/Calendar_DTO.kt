@@ -11,5 +11,6 @@ data class Calendar_DTO (
     @ColumnInfo(name = "date")val date: String,
     @ColumnInfo(name = "task") val task: String,
     @ColumnInfo(name = "starttime") val starttime: String,
-    @ColumnInfo(name = "endtime") val endtime: String
+    @ColumnInfo(name = "endtime") val endtime: String,
+    @ColumnInfo(name = "done") var done: Boolean = false
 )

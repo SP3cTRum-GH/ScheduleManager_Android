@@ -1,5 +1,7 @@
 package com.example.kotlintest
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,15 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddTask : BottomSheetDialogFragment() {
+class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,16 +47,22 @@ class AddTask : BottomSheetDialogFragment() {
 
         btnSave.setOnClickListener {
             val task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime())
+//            CoroutineScope(Dispatchers.Main).launch {
+//                val res = async(Dispatchers.IO) {
+//                    calDao.insertTaskForDate(task)
+//                }
+//                println(res)
+//            }
+
             CoroutineScope(Dispatchers.Main).launch {
-                val res = async(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     calDao.insertTaskForDate(task)
+                    cb()
                 }
-                println(res)
             }
+
             dismiss()
         }
         return view
-
-
     }
 }

@@ -3,6 +3,7 @@ package com.example.kotlintest
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface DAO {
@@ -11,4 +12,7 @@ interface DAO {
 
     @Insert
     fun insertTaskForDate(task: Calendar_DTO)
+
+    @Update
+    fun updateTaskForDate(done: Calendar_DTO)
 }
