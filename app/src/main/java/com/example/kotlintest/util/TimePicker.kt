@@ -1,15 +1,13 @@
-package com.example.kotlintest
+package com.example.kotlintest.util
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TimePicker
-import androidx.core.view.get
+import com.example.kotlintest.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.util.Calendar
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

@@ -1,31 +1,27 @@
-package com.example.kotlintest
+package com.example.kotlintest.calendar
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ListView
-import androidx.room.Dao
+import com.example.kotlintest.R
+import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.db.Calendar_DAO
+import com.example.kotlintest.db.Calendar_DTO
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.Calendar
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
-data class Item(val name: String, var isChecked: Boolean = false)
 class Calendar : Fragment() {
 //    private lateinit var adapter: ArrayAdapter<String> // 데이터 타입에 맞게 수정
-    private lateinit var calDao: DAO // Room DAO
+    private lateinit var calDao: Calendar_DAO // Room DAO
     private var selectedDate = ""
     private lateinit var adapter: CustomAdapter
 

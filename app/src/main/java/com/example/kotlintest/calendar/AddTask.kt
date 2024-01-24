@@ -1,18 +1,17 @@
-package com.example.kotlintest
+package com.example.kotlintest.calendar
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import com.example.kotlintest.R
+import com.example.kotlintest.util.TimePicker
+import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.db.Calendar_DTO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.*
-import java.sql.Time
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
     override fun onCreateView(

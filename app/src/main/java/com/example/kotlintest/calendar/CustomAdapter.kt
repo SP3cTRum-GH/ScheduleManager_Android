@@ -1,6 +1,5 @@
-package com.example.kotlintest
+package com.example.kotlintest.calendar
 
-import android.content.ClipData
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
+import com.example.kotlintest.R
+import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.db.Calendar_DTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

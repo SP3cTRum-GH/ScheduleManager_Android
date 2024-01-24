@@ -1,4 +1,4 @@
-package com.example.kotlintest
+package com.example.kotlintest.util
 
 data class SelectTime(
     val hour: String,

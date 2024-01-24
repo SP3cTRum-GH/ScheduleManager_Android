@@ -1,4 +1,4 @@
-package com.example.kotlintest
+package com.example.kotlintest.db
 
 import android.content.Context
 import androidx.room.Database
@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Calendar_DTO::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun calDao(): DAO
+    abstract fun calDao(): Calendar_DAO
 
     companion object {
         @Volatile

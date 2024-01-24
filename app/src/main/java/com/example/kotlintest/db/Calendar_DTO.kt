@@ -1,4 +1,4 @@
-package com.example.kotlintest
+package com.example.kotlintest.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
