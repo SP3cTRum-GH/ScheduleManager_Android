@@ -1,9 +1,6 @@
 package com.example.kotlintest.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface Calendar_DAO {
@@ -15,4 +12,7 @@ interface Calendar_DAO {
 
     @Update
     fun updateTaskForDate(done: Calendar_DTO)
+
+    @Delete
+    fun deletetable(task: Calendar_DTO)
 }

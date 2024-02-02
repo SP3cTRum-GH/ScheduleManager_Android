@@ -24,7 +24,7 @@
             android:text="일정추가" />
 
         <TextView
-            android:id="@+id/tesk"
+            android:id="@+id/plannerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="오늘의 일정" />

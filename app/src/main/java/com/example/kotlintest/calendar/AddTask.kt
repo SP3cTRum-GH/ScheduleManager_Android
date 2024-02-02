@@ -33,6 +33,7 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
 
         val tp = TimePicker(btnStart, btnEnd)
 
+        //시작시간
         btnStart.setOnClickListener {
             tp.setFlag(true)
             tp.show(parentFragmentManager,"time Picker")
@@ -44,6 +45,7 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
             tp.show(parentFragmentManager,"time Picker")
         }
 
+        //데이터베이스에 일정저장
         btnSave.setOnClickListener {
             val task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime())
 //            CoroutineScope(Dispatchers.Main).launch {

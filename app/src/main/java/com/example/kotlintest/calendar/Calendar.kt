@@ -23,7 +23,7 @@ class Calendar : Fragment() {
 //    private lateinit var adapter: ArrayAdapter<String> // 데이터 타입에 맞게 수정
     private lateinit var calDao: Calendar_DAO // Room DAO
     private var selectedDate = ""
-    private lateinit var adapter: CustomAdapter
+    private lateinit var adapter: CalendarAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -31,7 +31,6 @@ class Calendar : Fragment() {
         var btn = view.findViewById<Button>(R.id.add_task)
         var cal = view.findViewById<CalendarView>(R.id.calendar)
         var listView = view.findViewById<ListView>(R.id.task)
-//        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1) // 데이터 타입에 맞게 수정
 
         // Room 데이터베이스 인스턴스 생성
         val db = AppDatabase.getDatabase(requireContext())
@@ -41,23 +40,23 @@ class Calendar : Fragment() {
 
         selectedDate = LocalDate.now().toString()
         // 데이터 가져오기
-
-        var items:ArrayList<Calendar_DTO> = ArrayList<Calendar_DTO>()
-        adapter = CustomAdapter(requireContext(), items)
+        var items:ArrayList<Calendar_DTO> = ArrayList()
+        adapter = CalendarAdapter(requireContext(), items)
         listView.adapter = adapter
 
         loadDataFromDb(adapter)
 
+        //선택한 날에 맞는 일정 불러오기
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             selectedDate = dateFormat.format(calendar.time)
-//            println(selectedDate)
             loadDataFromDb(adapter)
         }
 
+        //일정추가 -> Addtask 화면 띄우기
         btn.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("date", selectedDate)
@@ -73,7 +72,7 @@ class Calendar : Fragment() {
         return view
     }
 
-    private fun loadDataFromDb(adapter: CustomAdapter) {
+    private fun loadDataFromDb(adapter: CalendarAdapter) {
         val dataList = mutableListOf<Calendar_DTO>() // 데이터 타입에 맞게 수정
 
         // 백그라운드 스레드에서 실행

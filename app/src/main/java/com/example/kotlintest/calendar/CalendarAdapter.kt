@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class CustomAdapter (val context: Context, var items: ArrayList<Calendar_DTO>) : BaseAdapter() {
+class CalendarAdapter (val context: Context, var items: ArrayList<Calendar_DTO>) : BaseAdapter() {
     override fun getCount(): Int {
         return items.size
     }
@@ -46,7 +46,7 @@ class CustomAdapter (val context: Context, var items: ArrayList<Calendar_DTO>) :
         var currentItem = items[position]
 
         val checkBox: CheckBox = itemView!!.findViewById(R.id.checkBox)
-        val textView: TextView = itemView.findViewById(R.id.tesk)
+        val textView: TextView = itemView.findViewById(R.id.plannerName)
 
         checkBox.isChecked = currentItem.done
         textView.text = currentItem.task

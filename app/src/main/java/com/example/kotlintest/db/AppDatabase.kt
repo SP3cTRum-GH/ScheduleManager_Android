@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Calendar_DTO::class], version = 1)
+@Database(entities = [Calendar_DTO::class, Home_DTO::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun calDao(): Calendar_DAO
+    abstract fun homeDao(): Home_DAO
 
     companion object {
         @Volatile
@@ -16,6 +17,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
+
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database.db"
