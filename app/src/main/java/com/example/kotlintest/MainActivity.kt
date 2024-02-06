@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.kotlintest.calendar.Calendar
-import com.example.kotlintest.goal.Goal
+import com.example.kotlintest.settingplanner.SettingPlanner
 import com.example.kotlintest.home.Home
 import com.example.kotlintest.setting.Setting
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.calinder -> {
                     frag = Calendar()
                 }
-                R.id.goal -> {
-                    frag = Goal()
+                R.id.planner -> {
+                    frag = SettingPlanner()
                 }
                 R.id.setting -> {
                     frag = Setting()

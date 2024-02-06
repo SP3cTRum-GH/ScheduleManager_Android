@@ -17,7 +17,7 @@ import com.example.kotlintest.db.Home_DAO
 import com.example.kotlintest.db.Home_DTO
 import java.util.concurrent.Executors
 
-class EditPlannerFragment : DialogFragment(), ToggleVisibility {
+class EditPlannerFragment : DialogFragment() {
     private lateinit var homeDao: Home_DAO
     private lateinit var adapter: HomeAdapter
     private lateinit var view: View
@@ -30,7 +30,6 @@ class EditPlannerFragment : DialogFragment(), ToggleVisibility {
         view = inflater.inflate(R.layout.fragment_edit_planner, container, false)
         val plannerlist = view.findViewById<ListView>(R.id.plannerList)
         plannerlist.choiceMode = ListView.CHOICE_MODE_SINGLE
-        val add = view.findViewById<Button>(R.id.add)
         val cancel = view.findViewById<Button>(R.id.cancel)
         val save = view.findViewById<Button>(R.id.save)
 
@@ -44,19 +43,19 @@ class EditPlannerFragment : DialogFragment(), ToggleVisibility {
         plannerlist.adapter = adapter
         loadDataFromDb(adapter)
 
-        add.setOnClickListener {
-            val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-            transaction.replace(R.id.frame, AddPlanner(this))
-            transaction.addToBackStack(null)
-            transaction.commit()
-//            val transaction = childFragmentManager.beginTransaction()
-//            transaction.replace(R.id.layout_pl, AddPlanner())
-//            parentFragmentManager.beginTransaction().remove(this).commit()
-
-            add.visibility = View.GONE
-            cancel.visibility = View.GONE
-            save.visibility = View.GONE
-        }
+//        add.setOnClickListener {
+//            val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
+//            transaction.replace(R.id.frame, AddPlanner(this))
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+////            val transaction = childFragmentManager.beginTransaction()
+////            transaction.replace(R.id.layout_pl, AddPlanner())
+////            parentFragmentManager.beginTransaction().remove(this).commit()
+//
+//            add.visibility = View.GONE
+//            cancel.visibility = View.GONE
+//            save.visibility = View.GONE
+//        }
 
         cancel.setOnClickListener{
             dismiss()
@@ -89,10 +88,9 @@ class EditPlannerFragment : DialogFragment(), ToggleVisibility {
         }
     }
 
-    override fun toggle() {
-        view.findViewById<Button>(R.id.add).visibility = View.VISIBLE
-        view.findViewById<Button>(R.id.cancel).visibility = View.VISIBLE
-        view.findViewById<Button>(R.id.save).visibility = View.VISIBLE
-        view.invalidate()
-    }
+//    override fun toggle() {
+//        view.findViewById<Button>(R.id.cancel).visibility = View.VISIBLE
+//        view.findViewById<Button>(R.id.save).visibility = View.VISIBLE
+//        view.invalidate()
+//    }
 }

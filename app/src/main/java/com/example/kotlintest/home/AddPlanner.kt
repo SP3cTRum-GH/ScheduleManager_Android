@@ -9,15 +9,15 @@ import androidx.fragment.app.Fragment
 import com.example.kotlintest.R
 import com.example.kotlintest.util.TimePicker
 
-interface ToggleVisibility {
-    fun toggle()
-}
+//interface ToggleVisibility {
+//    fun toggle()
+//}
 
-class AddPlanner : Fragment {
-    var inter: ToggleVisibility
-    constructor(inter: ToggleVisibility){
-        this.inter = inter
-    }
+class AddPlanner : Fragment() {
+//    var inter: ToggleVisibility
+//    constructor(inter: ToggleVisibility){
+//        this.inter = inter
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class AddPlanner : Fragment {
         val button = view.findViewById<Button>(R.id.btnSave)
         button.setOnClickListener{
             parentFragmentManager.beginTransaction().remove(this).commit()
-            this.inter.toggle()
+//            this.inter.toggle()
         }
 
         val tp = TimePicker(btnStart, btnEnd)

@@ -16,14 +16,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="시간표 이름:"
             android:textSize="16sp"/>
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/plannerNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

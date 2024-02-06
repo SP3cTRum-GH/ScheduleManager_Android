@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Calendar_DTO::class, Home_DTO::class], version = 1)
+@Database(entities = [Calendar_DTO::class, Home_DTO::class, PlannerName_DTO::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun calDao(): Calendar_DAO
     abstract fun homeDao(): Home_DAO
+    abstract fun plannerDao():PlannerName_DAO
 
     companion object {
         @Volatile
