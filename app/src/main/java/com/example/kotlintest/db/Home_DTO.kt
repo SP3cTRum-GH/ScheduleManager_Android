@@ -10,5 +10,5 @@ data class Home_DTO (
     @ColumnInfo val starttime: String,
     @ColumnInfo val endtime: String,
     @ColumnInfo val task: String,
-    @ColumnInfo val name: String
+    @ColumnInfo val name: Long
 )

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".settingplanner.DetailPlanner">
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/detailPieChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+
+    </com.github.mikephil.charting.charts.PieChart>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp" android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailPieChart">
+
+        <TextView
+            android:id="@+id/dp_startTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="시작시간" android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/dp_endTime" app:layout_constraintHorizontal_weight="2.5"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/dp_endTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="종료시간"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/dp_task" app:layout_constraintHorizontal_weight="2.5"
+            app:layout_constraintStart_toEndOf="@+id/dp_startTime" app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/dp_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="일정"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="5" app:layout_constraintStart_toEndOf="@+id/dp_endTime"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ListView
+        android:id="@+id/detailListView"
+        android:layout_width="match_parent" android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/addSchedule"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
+    <Button
+        android:id="@+id/addSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="일정추가" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailListView"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

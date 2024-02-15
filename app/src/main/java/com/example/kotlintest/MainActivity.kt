@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.calinder -> {
                     frag = Calendar()
                 }
-                R.id.planner -> {
+                R.id.detailPlannerName -> {
                     frag = SettingPlanner()
                 }
                 R.id.setting -> {

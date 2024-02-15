@@ -4,32 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.AddPlanner">
-
-    <LinearLayout
-        android:id="@+id/plannerName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/task"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="시간표 이름:"
-            android:textSize="16sp"/>
-
-        <EditText
-            android:id="@+id/plannerNameET"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:ems="10"
-            android:inputType="textPersonName"/>
-    </LinearLayout>
+    tools:context=".settingplanner.AddPlanner">
 
     <LinearLayout
         android:id="@+id/task"
@@ -37,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plannerName">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="83dp"
@@ -46,11 +21,11 @@
             android:textSize="16sp"/>
 
         <EditText
+            android:id="@+id/editTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:ems="10"
-            android:inputType="textPersonName"/>
+            android:ems="10" android:inputType="textPersonName"/>
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="@+id/plannerName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task">
 
         <TextView
@@ -80,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="@+id/plannerName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startTime">
 
         <TextView

@@ -4,12 +4,12 @@ import androidx.room.*
 
 @Dao
 interface Home_DAO {
-    @Query("SELECT name FROM home")
-    fun getAllPlanner(): List<String>
+    @Query("SELECT * FROM home WHERE name = :name")
+    fun getAllPlanner(name:Long): List<Home_DTO>
 
     @Insert
     fun insertPlanner(task: Home_DTO)
 
     @Query("DELETE FROM home WHERE name = :name")
-    fun deletePlanner(name: String)
+    fun deletePlanner(name: Long)
 }

@@ -73,7 +73,7 @@ class Calendar : Fragment() {
     }
 
     private fun loadDataFromDb(adapter: CalendarAdapter) {
-        val dataList = mutableListOf<Calendar_DTO>() // 데이터 타입에 맞게 수정
+        val dataList = mutableListOf<Calendar_DTO>()
 
         // 백그라운드 스레드에서 실행
         Executors.newSingleThreadExecutor().execute {

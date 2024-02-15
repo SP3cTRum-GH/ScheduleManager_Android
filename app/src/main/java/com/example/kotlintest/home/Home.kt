@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.kotlintest.R
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.PieChart
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class Home : Fragment() {
@@ -17,7 +18,7 @@ class Home : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_home, container, false)
-        val pieChart = view.findViewById<LineChart>(R.id.PieChart)
+        val pieChart = view.findViewById<PieChart>(R.id.detailPieChart)
         val editChart = view.findViewById<FloatingActionButton>(R.id.editChart)
 
         //시간표 수정|추가

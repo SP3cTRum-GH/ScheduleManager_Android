@@ -5,15 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.FragmentTransaction
-import androidx.room.Dao
 import com.example.kotlintest.R
-import com.example.kotlintest.calendar.CalendarAdapter
 import com.example.kotlintest.db.AppDatabase
-import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.PlannerName_DAO
 import com.example.kotlintest.db.PlannerName_DTO
 import java.util.concurrent.Executors
@@ -51,8 +47,10 @@ class SettingPlanner : Fragment() {
         }
 
         //아이템클릭시 세부일정설정창으로 전환
-        listView.setOnItemClickListener { adapterView, view, i, l ->
-
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as PlannerName_DTO
+            val fragment = DetailPlanner(selectedItem)
+            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
         }
 
         return view

@@ -52,6 +52,7 @@ class TimePicker() : BottomSheetDialogFragment() {
         val ok =  view.findViewById<Button>(R.id.btnok)
         val cancle = view.findViewById<Button>(R.id.btncancle)
         val tp = view.findViewById<TimePicker>(R.id.timePicker)
+
         if(!isStart) {
             var txt = this.startBtn?.text.toString().split(" : ")
             tp.hour = txt[0].toInt()
@@ -60,12 +61,12 @@ class TimePicker() : BottomSheetDialogFragment() {
 
         ok.setOnClickListener {
             if(isStart) {
-                this.startTime = tp.hour.toString() +" : " +tp.minute.toString()
+                this.startTime = String.format("%02d", tp.hour) +" : " +String.format("%02d", tp.minute)
                 this.startBtn?.setText(startTime)
-                this.endTime = tp.hour.plus(1).toString() + " : " +tp.minute.toString()
+                this.endTime = String.format("%02d", tp.hour + 1) + " : " +String.format("%02d", tp.minute)
                 this.endBtn?.setText(endTime)
             } else {
-                this.endTime = tp.hour.toString() +" : " +tp.minute.toString()
+                this.endTime = String.format("%02d", tp.hour) +" : " +String.format("%02d", tp.minute)
                 this.endBtn?.setText(endTime)
             }
 

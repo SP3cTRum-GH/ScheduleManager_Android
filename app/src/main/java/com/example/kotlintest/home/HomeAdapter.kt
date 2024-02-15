@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.*
 import com.example.kotlintest.R
 import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.db.PlannerName_DTO
 
-class HomeAdapter(val context: Context, var items: ArrayList<String>) : BaseAdapter() {
+class HomeAdapter(val context: Context, var items: ArrayList<PlannerName_DTO>) : BaseAdapter() {
     override fun getCount(): Int {
         return items.size
     }
@@ -21,11 +22,8 @@ class HomeAdapter(val context: Context, var items: ArrayList<String>) : BaseAdap
     fun clear() {
         items.clear()
     }
-    fun addAll(data: MutableList<String>) {
+    fun addAll(data: MutableList<PlannerName_DTO>) {
         this.items = ArrayList(data)
-        if(items.isEmpty()){
-            items.add("시간표를 추가해 주세요")
-        }
         this.notifyDataSetChanged()
     }
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
@@ -36,7 +34,7 @@ class HomeAdapter(val context: Context, var items: ArrayList<String>) : BaseAdap
         var currentItem = items[p0]
 
         val textView: TextView = itemView!!.findViewById<TextView>(R.id.plannerName)
-        textView.text = currentItem
+        textView.text = currentItem.name
 
 
 

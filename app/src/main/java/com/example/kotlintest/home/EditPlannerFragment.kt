@@ -11,14 +11,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.kotlintest.R
 import com.example.kotlintest.calendar.CalendarAdapter
-import com.example.kotlintest.db.AppDatabase
-import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.db.Home_DAO
-import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.db.*
 import java.util.concurrent.Executors
 
 class EditPlannerFragment : DialogFragment() {
-    private lateinit var homeDao: Home_DAO
+    private lateinit var plannerNameDao: PlannerName_DAO
     private lateinit var adapter: HomeAdapter
     private lateinit var view: View
 
@@ -36,9 +33,9 @@ class EditPlannerFragment : DialogFragment() {
         // Room 데이터베이스 인스턴스 생성
         val db = AppDatabase.getDatabase(requireContext())
         // Room DAO 초기화
-        homeDao = db.homeDao()
+        plannerNameDao = db.plannerDao()
         //데이터 가져오기
-        var items = ArrayList<String>()
+        var items = ArrayList<PlannerName_DTO>()
         adapter = HomeAdapter(requireContext(), items)
         plannerlist.adapter = adapter
         loadDataFromDb(adapter)
@@ -69,11 +66,11 @@ class EditPlannerFragment : DialogFragment() {
     }
 
     private fun loadDataFromDb(adapter: HomeAdapter) {
-        val dataList = mutableListOf<String>() // 데이터 타입에 맞게 수정
+        val dataList = mutableListOf<PlannerName_DTO>() // 데이터 타입에 맞게 수정
 
         // 백그라운드 스레드에서 실행
         Executors.newSingleThreadExecutor().execute {
-            val data = homeDao.getAllPlanner() // Room DAO에서 데이터 가져오기
+            val data = plannerNameDao.getAllPlanner() // Room DAO에서 데이터 가져오기
 
             // 가져온 데이터 처리
             for (item in data) {
