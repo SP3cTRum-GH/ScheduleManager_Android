@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class TodoList_DTO (
     @PrimaryKey(autoGenerate = true) val index: Long = 0,
     @ColumnInfo val todo: String,
+    @ColumnInfo val done: Boolean,
     @ColumnInfo val plannerIndex: Long
 )

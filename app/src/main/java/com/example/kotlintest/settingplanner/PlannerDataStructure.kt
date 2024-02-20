@@ -59,7 +59,7 @@ class PlannerDataStructure {
 
             pieList.add(PieEntry(persent, i.task))
         }
-
+        
     }
 
     private fun sorter(sortinglist:ArrayList<Home_DTO>) {

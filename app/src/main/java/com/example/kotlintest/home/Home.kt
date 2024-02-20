@@ -19,16 +19,15 @@ class Home : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         val pieChart = view.findViewById<PieChart>(R.id.detailPieChart)
-        val editChart = view.findViewById<FloatingActionButton>(R.id.editChart)
+        val changePlanner = view.findViewById<FloatingActionButton>(R.id.editChart)
 
-        //시간표 수정|추가
-        editChart.setOnClickListener{
-            val editplanner = EditPlannerFragment()
+        //시간표 변경
+        changePlanner.setOnClickListener{
+            val changeplanner = EditPlannerFragment()
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
             transaction.addToBackStack(null)
-//
-//            transaction.add(EditPlannerFragment(), EditPlannerFragment().tag).commit()
-            editplanner.show(transaction,editplanner.tag)
+
+            changeplanner.show(transaction,changeplanner.tag)
         }
 
         return view

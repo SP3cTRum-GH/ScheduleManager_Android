@@ -45,6 +45,11 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO) : Fragment() {
             addSchedule.show(transaction,addSchedule.tag)
         }
 
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as Home_DTO
+            val fragment = SettingTodoList(selectedItem)
+            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
+        }
 
         return view
     }

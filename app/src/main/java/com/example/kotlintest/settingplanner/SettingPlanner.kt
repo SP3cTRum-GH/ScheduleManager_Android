@@ -50,7 +50,7 @@ class SettingPlanner : Fragment() {
         listView.setOnItemClickListener { parent, view, position, id ->
             val selectedItem = parent.getItemAtPosition(position) as PlannerName_DTO
             val fragment = DetailPlanner(selectedItem)
-            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
         }
 
         return view

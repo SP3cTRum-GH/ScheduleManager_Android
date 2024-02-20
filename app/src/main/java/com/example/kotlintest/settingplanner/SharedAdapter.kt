@@ -55,13 +55,15 @@ class SharedAdapter {
     private fun setAdapter() {
         val listitem = data.getDatalist()
         listAdapter.items = listitem
-        val dataSet = PieDataSet(data.getPieList(), "");
+        val dataSet = PieDataSet(data.getPieList(), "")
         val data = PieData(dataSet)
         data.setValueTextSize(0f)
-        val start = listitem[0].starttime.split(" : ")
-        val min = start[0].toInt() * 60 + start[1].toInt()
+        if(listitem.isNotEmpty()) {
+            val start = listitem[0].starttime.split(" : ")
+            val min = start[0].toInt() * 60 + start[1].toInt()
 
-        piechart.rotationAngle = -90f + (min*0.25f)
+            piechart.rotationAngle = -90f + (min * 0.25f)
+        }
         piechart.data = data
         piechart.legend.isEnabled = false
 

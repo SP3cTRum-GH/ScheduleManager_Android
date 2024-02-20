@@ -40,19 +40,6 @@ class EditPlannerFragment : DialogFragment() {
         plannerlist.adapter = adapter
         loadDataFromDb(adapter)
 
-//        add.setOnClickListener {
-//            val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-//            transaction.replace(R.id.frame, AddPlanner(this))
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-////            val transaction = childFragmentManager.beginTransaction()
-////            transaction.replace(R.id.layout_pl, AddPlanner())
-////            parentFragmentManager.beginTransaction().remove(this).commit()
-//
-//            add.visibility = View.GONE
-//            cancel.visibility = View.GONE
-//            save.visibility = View.GONE
-//        }
 
         cancel.setOnClickListener{
             dismiss()
