@@ -15,7 +15,6 @@ class PlannerDataStructure {
         blankdatalist = ArrayList(datalist)
         pieList = ArrayList()
         addBlank()
-
     }
 
     fun addData(data: Home_DTO) {

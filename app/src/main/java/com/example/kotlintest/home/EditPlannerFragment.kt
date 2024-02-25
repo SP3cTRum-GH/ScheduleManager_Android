@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
@@ -14,10 +15,11 @@ import com.example.kotlintest.calendar.CalendarAdapter
 import com.example.kotlintest.db.*
 import java.util.concurrent.Executors
 
-class EditPlannerFragment : DialogFragment() {
+class EditPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
     private lateinit var plannerNameDao: PlannerName_DAO
     private lateinit var adapter: HomeAdapter
     private lateinit var view: View
+    var selectedItem: Long = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +42,17 @@ class EditPlannerFragment : DialogFragment() {
         plannerlist.adapter = adapter
         loadDataFromDb(adapter)
 
+        plannerlist.setOnItemClickListener { adapterView, view, i, l ->
+            val position = adapterView.getItemAtPosition(i) as PlannerName_DTO
+            selectedItem = position.index
+        }
 
         cancel.setOnClickListener{
             dismiss()
         }
 
         save.setOnClickListener{
+            cb(selectedItem)
             dismiss()
         }
 

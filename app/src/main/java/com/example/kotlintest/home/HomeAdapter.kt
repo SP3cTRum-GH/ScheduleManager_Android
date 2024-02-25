@@ -33,9 +33,9 @@ class HomeAdapter(val context: Context, var items: ArrayList<PlannerName_DTO>) :
         }
         var currentItem = items[p0]
 
-        val textView: TextView = itemView!!.findViewById<TextView>(R.id.plannerName)
-        textView.text = currentItem.name
+        val textView: TextView = itemView!!.findViewById(R.id.plannerName)
 
+        textView.text = currentItem.name
 
 
         return itemView
