@@ -2,8 +2,11 @@ package com.example.kotlintest.settingplanner
 
 import android.content.Context
 import android.graphics.Color
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.util.SwipeHendler
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -14,21 +17,24 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class SharedAdapter {
+class SharedAdapter :SwipeHendler.OnItemMoveListener {
+//    private lateinit var dragStart
     private var db: AppDatabase
     private var mContext: Context
     private var listAdapter: SettingPlannerAdapter
     private var idx: Long
     private var piechart: PieChart
+    private var fm: FragmentManager
     private lateinit var data: PlannerDataStructure
 
-    constructor(context: Context, idx: Long, piechart: PieChart) {
+    constructor(context: Context, idx: Long, piechart: PieChart, fm: FragmentManager) {
         this.mContext = context
         this.db = AppDatabase.getDatabase(mContext)
         this.idx = idx
         this.piechart = piechart
+        this.fm = fm
 
-        this.listAdapter = SettingPlannerAdapter(mContext)
+        this.listAdapter = SettingPlannerAdapter(fm)
         loadDataFromDb()
     }
 
@@ -77,4 +83,16 @@ class SharedAdapter {
         piechart.invalidate()
     }
 
+    override fun swiped(position: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            var d = data.getDatalist()[position]
+            data.deleteData(position)
+
+            CoroutineScope(Dispatchers.IO).async {
+                db.homeDao().deletePlanner(d)
+                db.todoDao().deleteAllTodo(d.index)
+            }
+            setAdapter()
+        }
+    }
 }

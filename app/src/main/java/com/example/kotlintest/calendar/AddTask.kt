@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Switch
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.R
 import com.example.kotlintest.util.TimePicker
 import com.example.kotlintest.db.AppDatabase
@@ -20,11 +23,14 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val selectedDateStr = arguments?.getString("date") ?: "" // 문자열로부터 날짜 문자열 가져옴
-        var view = inflater.inflate(R.layout.fragment_add_task, container, false)
-        var btnStart = view.findViewById<Button>(R.id.timeset_start)
-        var btnEnd = view.findViewById<Button>(R.id.timeset_end)
-        var btnSave = view.findViewById<Button>(R.id.btn_save)
-        var txtTask = view.findViewById<EditText>(R.id.task)
+        val view = inflater.inflate(R.layout.fragment_add_task, container, false)
+        val btnStart = view.findViewById<Button>(R.id.timeset_start)
+        val btnEnd = view.findViewById<Button>(R.id.timeset_end)
+        val btnSave = view.findViewById<Button>(R.id.btn_save)
+        val txtTask = view.findViewById<EditText>(R.id.task)
+        val allDayButton = view.findViewById<Switch>(R.id.allDays)
+        val startTimeArea = view.findViewById<LinearLayout>(R.id.startTimeLinearLayout)
+        val endTimeArea = view.findViewById<LinearLayout>(R.id.endTimeLinearLayout)
 
         // 데이터베이스 인스턴스 얻기
         val db = AppDatabase.getDatabase(requireContext())
@@ -33,6 +39,16 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
 
         val tp = TimePicker(btnStart, btnEnd)
 
+        allDayButton.setOnCheckedChangeListener { compoundButton, onSwitch ->
+            if(onSwitch){
+                endTimeArea.visibility = View.GONE
+                startTimeArea.visibility = View.GONE
+            }
+            else{
+                endTimeArea.visibility = View.VISIBLE
+                startTimeArea.visibility = View.VISIBLE
+            }
+        }
         //시작시간
         btnStart.setOnClickListener {
             tp.setFlag(true)
@@ -47,7 +63,14 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
 
         //데이터베이스에 일정저장
         btnSave.setOnClickListener {
-            val task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime())
+            var task:Calendar_DTO
+            if(allDayButton.isChecked){
+                task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = "23 : 59", starttime = "00 : 00")
+            }
+            else {
+                task = Calendar_DTO(date = selectedDateStr, task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime()
+                )
+            }
 //            CoroutineScope(Dispatchers.Main).launch {
 //                val res = async(Dispatchers.IO) {
 //                    calDao.insertTaskForDate(task)

@@ -7,16 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.PlannerName_DAO
 import com.example.kotlintest.db.PlannerName_DTO
+import com.example.kotlintest.util.SwipeHendler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-class SettingPlanner : Fragment() {
+class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
     private lateinit var plannerDao: PlannerName_DAO // Room DAO
     private lateinit var adapter: PlannerAdapter
+    lateinit var db: AppDatabase
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,18 +35,22 @@ class SettingPlanner : Fragment() {
         var view = inflater.inflate(R.layout.setting_planner, container, false)
 
         val add = view.findViewById<Button>(R.id.btnAddPlanner)
-        val listView = view.findViewById<ListView>(R.id.plannerNameList)
+        val listView = view.findViewById<RecyclerView>(R.id.plannerNameList)
         // Room 데이터베이스 인스턴스 생성
-        val db = AppDatabase.getDatabase(requireContext())
+        db = AppDatabase.getDatabase(requireContext())
 
         // Room DAO 초기화
         plannerDao = db.plannerDao()
 
-        var items:ArrayList<PlannerName_DTO> = ArrayList()
-        adapter = PlannerAdapter(requireContext(), items)
+        adapter = PlannerAdapter(parentFragmentManager)
         listView.adapter = adapter
 
+        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(adapter)
+
+        val l = ItemTouchHelper(SwipeHendler(this))
+        l.attachToRecyclerView(listView)
+
         add.setOnClickListener{
             val addplannername = AddPlannerName{
                 loadDataFromDb(adapter)
@@ -47,11 +61,11 @@ class SettingPlanner : Fragment() {
         }
 
         //아이템클릭시 세부일정설정창으로 전환
-        listView.setOnItemClickListener { parent, view, position, id ->
-            val selectedItem = parent.getItemAtPosition(position) as PlannerName_DTO
-            val fragment = DetailPlanner(selectedItem)
-            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
-        }
+//        listView.setOnItemClickListener { parent, view, position, id ->
+//            val selectedItem = parent.getItemAtPosition(position) as PlannerName_DTO
+//            val fragment = DetailPlanner(selectedItem)
+//            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
+//        }
 
         return view
     }
@@ -72,6 +86,23 @@ class SettingPlanner : Fragment() {
                 adapter.clear()
                 adapter.addAll(dataList)
                 adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun swiped(position: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            var d = adapter.items[position]
+//            data.deleteData(position)
+            adapter.items.removeAt(position)
+
+            CoroutineScope(Dispatchers.IO).async {
+                db.plannerDao().deletePlanner(d)
+                db.homeDao().deleteAllplan(d.index)
+                var list = db.homeDao().selectIndex(d.index)
+                for(i in list){
+                    db.todoDao().deleteAllTodo(i)
+                }
             }
         }
     }

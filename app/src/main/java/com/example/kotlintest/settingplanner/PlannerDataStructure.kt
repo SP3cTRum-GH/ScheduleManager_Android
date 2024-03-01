@@ -25,6 +25,13 @@ class PlannerDataStructure {
         addBlank()
     }
 
+    fun deleteData(data: Int) {
+        datalist.removeAt(data)
+        blankdatalist = ArrayList(datalist)
+        pieList.clear()
+        addBlank()
+    }
+
     private fun makeBlank(i1: Int, i2: Int) {
         val end = blankdatalist[i1].endtime.split(" : ")
         val t1 = end[0].toInt() * 60 + end[1].toInt()

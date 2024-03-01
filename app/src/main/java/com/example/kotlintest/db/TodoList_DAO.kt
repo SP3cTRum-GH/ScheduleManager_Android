@@ -1,9 +1,6 @@
 package com.example.kotlintest.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface TodoList_DAO {
@@ -16,6 +13,9 @@ interface TodoList_DAO {
     @Update
     fun update(done: TodoList_DTO)
 
-    @Query("DELETE FROM todo WHERE todo = :name")
-    fun deletePlanner(name: String)
+    @Delete
+    fun deleteTodo(obj: TodoList_DTO)
+
+    @Query("DELETE FROM todo WHERE plannerindex = :planner")
+    fun deleteAllTodo(planner:Long)
 }

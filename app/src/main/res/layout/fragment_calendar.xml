@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="오늘의 일정" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/task"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

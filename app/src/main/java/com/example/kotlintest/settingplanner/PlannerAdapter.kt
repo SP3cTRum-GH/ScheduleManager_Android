@@ -6,21 +6,46 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.PlannerName_DTO
+import com.example.kotlintest.db.TodoList_DTO
 
-class PlannerAdapter (val context: Context, var items: ArrayList<PlannerName_DTO>) : BaseAdapter() {
-    override fun getCount(): Int {
-        return items.size
+class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder> {
+    lateinit var mContext: Context
+    var items: ArrayList<PlannerName_DTO>
+    var fm: FragmentManager
+    constructor(fm: FragmentManager) {
+        this.items = ArrayList()
+        this.fm = fm
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlannerAdapter.PlannerNameViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.stringlist, parent, false)
+        mContext = view.context
+        return PlannerNameViewHolder(view)
     }
 
-    override fun getItem(p0: Int): Any {
-        return items[p0]
+    override fun onBindViewHolder(holder: PlannerAdapter.PlannerNameViewHolder, position: Int) {
+        var currentItem = items[position]
+
+        holder.plannerName.text = currentItem.name
+
+        holder.plannerName.setOnClickListener {
+            val selectedItem = items[position]
+            val fragment = DetailPlanner(selectedItem)
+
+            fm.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
+        }
     }
 
     override fun getItemId(p0: Int): Long {
         return 0
+    }
+
+    override fun getItemCount(): Int {
+        return items.count()
     }
 
     fun clear() {
@@ -32,18 +57,7 @@ class PlannerAdapter (val context: Context, var items: ArrayList<PlannerName_DTO
         this.notifyDataSetChanged()
     }
 
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        var itemView = p1
-        if (itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.stringlist, p2, false)
-        }
-        var currentItem = items[p0]
-
-        val plannerName: TextView = itemView!!.findViewById(R.id.plannerName)
-
-        plannerName.text = currentItem.name
-
-        return itemView
+    inner class PlannerNameViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val plannerName: TextView = itemView.findViewById(R.id.plannerName)
     }
-
 }

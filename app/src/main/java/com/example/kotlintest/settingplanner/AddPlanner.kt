@@ -45,12 +45,11 @@ class AddPlanner(val cb: (data: Home_DTO) -> Unit, val idx:Long) : DialogFragmen
         }
 
         button.setOnClickListener{
-            val data = Home_DTO(starttime = tp.getStartTime(), endtime =tp.getEndTime(), task = task.text.toString(), name = idx)
+            val data = Home_DTO(starttime = tp.getStartTime(), endtime = tp.getEndTime(), task = task.text.toString(), name = idx)
             CoroutineScope(Dispatchers.Main).launch {
                 var ret = CoroutineScope(Dispatchers.IO).async {
                     homeDao.insertPlanner(data)
                 }
-
                 ret.await()
                 cb(data)
             }

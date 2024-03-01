@@ -1,6 +1,7 @@
 package com.example.kotlintest.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -12,6 +13,6 @@ interface PlannerName_DAO {
     @Insert
     fun insertPlanner(task: PlannerName_DTO)
 
-    @Query("DELETE FROM planner WHERE name = :name")
-    fun deletePlanner(name: String)
+    @Delete
+    fun deletePlanner(obj: PlannerName_DTO)
 }

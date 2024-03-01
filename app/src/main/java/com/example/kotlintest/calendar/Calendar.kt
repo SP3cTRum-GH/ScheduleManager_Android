@@ -8,10 +8,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ListView
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DAO
 import com.example.kotlintest.db.Calendar_DTO
+import com.example.kotlintest.util.SwipeHendler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -19,21 +27,21 @@ import java.util.Calendar
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
-class Calendar : Fragment() {
+class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
 //    private lateinit var adapter: ArrayAdapter<String> // 데이터 타입에 맞게 수정
     private lateinit var calDao: Calendar_DAO // Room DAO
     private var selectedDate = ""
     private lateinit var adapter: CalendarAdapter
-
+    lateinit var db: AppDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_calendar, container, false)
         var btn = view.findViewById<Button>(R.id.add_task)
         var cal = view.findViewById<CalendarView>(R.id.calendar)
-        var listView = view.findViewById<ListView>(R.id.task)
+        var listView = view.findViewById<RecyclerView>(R.id.task)
 
         // Room 데이터베이스 인스턴스 생성
-        val db = AppDatabase.getDatabase(requireContext())
+        db = AppDatabase.getDatabase(requireContext())
 
         // Room DAO 초기화
         calDao = db.calDao()
@@ -41,11 +49,13 @@ class Calendar : Fragment() {
         selectedDate = LocalDate.now().toString()
         // 데이터 가져오기
         var items:ArrayList<Calendar_DTO> = ArrayList()
-        adapter = CalendarAdapter(requireContext(), items)
+        adapter = CalendarAdapter(parentFragmentManager)
         listView.adapter = adapter
-
+        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(adapter)
 
+        val l = ItemTouchHelper(SwipeHendler(this))
+        l.attachToRecyclerView(listView)
         //선택한 날에 맞는 일정 불러오기
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
@@ -89,6 +99,16 @@ class Calendar : Fragment() {
                 adapter.clear()
                 adapter.addAll(dataList)
                 adapter.notifyDataSetChanged()
+            }
+        }
+    }
+    override fun swiped(position: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            var d = adapter.items[position]
+            adapter.items.removeAt(position)
+
+            CoroutineScope(Dispatchers.IO).async {
+                db.calDao().deletetable(d)
             }
         }
     }

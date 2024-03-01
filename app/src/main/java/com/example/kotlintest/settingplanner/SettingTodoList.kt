@@ -8,13 +8,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.db.*
+import com.example.kotlintest.util.SwipeHendler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-class SettingTodoList(val plannerinfo: Home_DTO):Fragment(){
+class SettingTodoList(val plannerinfo: Home_DTO):Fragment(), SwipeHendler.OnItemMoveListener{
     private lateinit var todoDao: TodoList_DAO
     private lateinit var todoAdapter: TodoAdapter
+    // Room 데이터베이스 인스턴스 생성
+    lateinit var db: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,18 +33,19 @@ class SettingTodoList(val plannerinfo: Home_DTO):Fragment(){
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_setting_todo_list, container, false)
         val btnAdd = view.findViewById<Button>(R.id.btnAddTodo)
-        val listView = view.findViewById<ListView>(R.id.todoTaskList)
+        val listView = view.findViewById<RecyclerView>(R.id.todoTaskList)
 
-        // Room 데이터베이스 인스턴스 생성
-        val db = AppDatabase.getDatabase(requireContext())
-
+        db = AppDatabase.getDatabase(requireContext())
         // Room DAO 초기화
         todoDao = db.todoDao()
 
-        var items:ArrayList<TodoList_DTO> = ArrayList()
-        todoAdapter = TodoAdapter(requireContext(), items)
+        todoAdapter = TodoAdapter()
         listView.adapter = todoAdapter
+        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(todoAdapter)
+
+        val l = ItemTouchHelper(SwipeHendler(this))
+        l.attachToRecyclerView(listView)
 
         btnAdd.setOnClickListener{
             val addTodoTask = AddTodoTask(plannerinfo, {loadDataFromDb(todoAdapter)})
@@ -63,6 +74,18 @@ class SettingTodoList(val plannerinfo: Home_DTO):Fragment(){
                 adapter.clear()
                 adapter.addAll(dataList)
                 adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun swiped(position: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            var d = todoAdapter.items[position]
+//            data.deleteData(position)
+            todoAdapter.items.removeAt(position)
+
+            CoroutineScope(Dispatchers.IO).async {
+                db.todoDao().deleteTodo(d)
             }
         }
     }
