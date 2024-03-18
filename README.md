@@ -5,18 +5,23 @@
 
 ### 실행화면
 시간표 추가
+
 ![addPlanner](Docs/img/addPlanner.png)
 
 일정추가
+
 ![addPlannerPlan](Docs/img/addPlannerPlan.png)
 
 일정의 세부 TodoList 추가 가능
+
 ![addTodo](Docs/img/addTodo.png)
 
 캘린더에서 일정등록 가능
+
 ![cal](Docs/img/addCalPlan.png)
 
 홈화면에서 전체적인 일정 관리
+
 ![home](Docs/img/home.png)
 ### 사용기술
 - Kotlin
