@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Switch
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.R
 import com.example.kotlintest.util.TimePicker
 import com.example.kotlintest.db.AppDatabase

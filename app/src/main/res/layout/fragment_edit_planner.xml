@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     tools:context=".home.EditPlannerFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/plannerList"
         android:layout_width="match_parent"
         android:layout_height="300dp"
