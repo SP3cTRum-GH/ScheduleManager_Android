@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TimePicker
 import com.example.kotlintest.R
+import com.example.kotlintest.databinding.FragmentTimePickerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class TimePicker() : BottomSheetDialogFragment() {
+    private var _binding: FragmentTimePickerBinding? = null
+    private val binding get() = _binding!!
     private var startBtn: Button? = null
     private var endBtn: Button? = null
     private var startTime: String = ""
@@ -46,38 +49,38 @@ class TimePicker() : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = inflater.inflate(R.layout.fragment_time_picker, container, false)
-
-        // Inflate the layout for this fragment
-        val ok =  view.findViewById<Button>(R.id.btnok)
-        val cancle = view.findViewById<Button>(R.id.btncancle)
-        val tp = view.findViewById<TimePicker>(R.id.timePicker)
+        _binding = FragmentTimePickerBinding.inflate(inflater, container, false)
 
         if(!isStart) {
             var txt = this.startBtn?.text.toString().split(" : ")
-            tp.hour = txt[0].toInt()
-            tp.minute = txt[1].toInt()
+            binding.timePicker.hour = txt[0].toInt()
+            binding.timePicker.minute = txt[1].toInt()
         }
 
-        ok.setOnClickListener {
+        binding.tpOkbtn.setOnClickListener {
             if(isStart) {
-                this.startTime = String.format("%02d", tp.hour) +" : " +String.format("%02d", tp.minute)
+                this.startTime = String.format("%02d", binding.timePicker.hour) +" : " +String.format("%02d", binding.timePicker.minute)
                 this.startBtn?.setText(startTime)
-                this.endTime = String.format("%02d", tp.hour + 1) + " : " +String.format("%02d", tp.minute)
+                this.endTime = String.format("%02d", binding.timePicker.hour + 1) + " : " +String.format("%02d", binding.timePicker.minute)
                 this.endBtn?.setText(endTime)
             } else {
-                this.endTime = String.format("%02d", tp.hour) +" : " +String.format("%02d", tp.minute)
+                this.endTime = String.format("%02d", binding.timePicker.hour) +" : " +String.format("%02d", binding.timePicker.minute)
                 this.endBtn?.setText(endTime)
             }
 
             dismiss()
         }
 
-        cancle.setOnClickListener {
+        binding.tpCancelBtn.setOnClickListener {
             dismiss()
         }
 
-        return view
+        return binding.root
+    }
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

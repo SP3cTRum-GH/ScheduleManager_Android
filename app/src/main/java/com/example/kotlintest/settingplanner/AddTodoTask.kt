@@ -22,8 +22,8 @@ class AddTodoTask(val plannerinfo: Home_DTO, val cb: () -> Unit) : DialogFragmen
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_todo_task, container, false)
-        val cancel = view.findViewById<Button>(R.id.cancel)
-        val ok = view.findViewById<Button>(R.id.save)
+        val cancel = view.findViewById<Button>(R.id.spCancelBtn)
+        val ok = view.findViewById<Button>(R.id.spSubmitBtn)
         val todoTask = view.findViewById<EditText>(R.id.todoTaskET)
         // 데이터베이스 인스턴스 얻기
         val db = AppDatabase.getDatabase(requireContext())

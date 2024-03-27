@@ -5,7 +5,7 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".calendar.AddTask">
+    tools:context=".calendar.CalendarAddtask">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/task"
+        android:id="@+id/calTaskET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -42,10 +42,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task" />
+        app:layout_constraintTop_toBottomOf="@+id/calTaskET" />
 
     <Switch
-        android:id="@+id/allDays"
+        android:id="@+id/allDaysSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -63,7 +63,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allDays">
+        app:layout_constraintTop_toBottomOf="@+id/allDaysSwitch">
 
         <TextView
             android:id="@+id/textView8"
@@ -73,7 +73,7 @@
             android:text="시작" />
 
         <Button
-            android:id="@+id/timeset_start"
+            android:id="@+id/setStarttimeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -98,7 +98,7 @@
             android:text="종료" />
 
         <Button
-            android:id="@+id/timeset_end"
+            android:id="@+id/setEndtimeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -106,7 +106,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/calATSaveBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

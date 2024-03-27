@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.kotlintest.R
-import com.example.kotlintest.db.Home_DTO
 import com.example.kotlintest.db.PlannerName_DTO
 
 class HomeAdapter(val context: Context, var items: ArrayList<PlannerName_DTO>) : BaseAdapter() {
+
     override fun getCount(): Int {
         return items.size
     }
@@ -33,7 +33,7 @@ class HomeAdapter(val context: Context, var items: ArrayList<PlannerName_DTO>) :
         }
         var currentItem = items[p0]
 
-        val textView: TextView = itemView!!.findViewById(R.id.plannerName)
+        val textView: TextView = itemView!!.findViewById(R.id.calText)
 
         textView.text = currentItem.name
 

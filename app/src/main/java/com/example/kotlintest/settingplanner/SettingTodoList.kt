@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
+import com.example.kotlintest.databinding.FragmentSettingTodoListBinding
 import com.example.kotlintest.db.*
 import com.example.kotlintest.util.SwipeHendler
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +22,8 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 class SettingTodoList(val plannerinfo: Home_DTO):Fragment(), SwipeHendler.OnItemMoveListener{
+    private var _binding: FragmentSettingTodoListBinding? = null
+    private val binding get() = _binding!!
     private lateinit var todoDao: TodoList_DAO
     private lateinit var todoAdapter: TodoAdapter
     // Room 데이터베이스 인스턴스 생성
@@ -31,23 +34,21 @@ class SettingTodoList(val plannerinfo: Home_DTO):Fragment(), SwipeHendler.OnItem
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_setting_todo_list, container, false)
-        val btnAdd = view.findViewById<Button>(R.id.btnAddTodo)
-        val listView = view.findViewById<RecyclerView>(R.id.todoTaskList)
+        _binding = FragmentSettingTodoListBinding.inflate(inflater, container, false)
 
         db = AppDatabase.getDatabase(requireContext())
         // Room DAO 초기화
         todoDao = db.todoDao()
 
         todoAdapter = TodoAdapter()
-        listView.adapter = todoAdapter
-        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.todoTaskList.adapter = todoAdapter
+        binding.todoTaskList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(todoAdapter)
 
         val l = ItemTouchHelper(SwipeHendler(this))
-        l.attachToRecyclerView(listView)
+        l.attachToRecyclerView(binding.todoTaskList)
 
-        btnAdd.setOnClickListener{
+        binding.addTodoBtn.setOnClickListener{
             val addTodoTask = AddTodoTask(plannerinfo, {loadDataFromDb(todoAdapter)})
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
             transaction.addToBackStack(null)

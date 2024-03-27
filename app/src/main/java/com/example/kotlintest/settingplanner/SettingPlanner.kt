@@ -5,14 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ListView
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlintest.R
+import com.example.kotlintest.databinding.FragmentSettingPlannerBinding
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.PlannerName_DAO
 import com.example.kotlintest.db.PlannerName_DTO
@@ -24,6 +20,8 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
+    private var _binding: FragmentSettingPlannerBinding? = null
+    private val binding get() = _binding!!
     private lateinit var plannerDao: PlannerName_DAO // Room DAO
     private lateinit var adapter: PlannerAdapter
     lateinit var db: AppDatabase
@@ -32,10 +30,7 @@ class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.setting_planner, container, false)
-
-        val add = view.findViewById<Button>(R.id.btnAddPlanner)
-        val listView = view.findViewById<RecyclerView>(R.id.plannerNameList)
+        _binding = FragmentSettingPlannerBinding.inflate(inflater, container, false)
         // Room 데이터베이스 인스턴스 생성
         db = AppDatabase.getDatabase(requireContext())
 
@@ -43,16 +38,16 @@ class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
         plannerDao = db.plannerDao()
 
         adapter = PlannerAdapter(parentFragmentManager)
-        listView.adapter = adapter
+        binding.plannerNameList.adapter = adapter
 
-        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.plannerNameList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(adapter)
 
         val l = ItemTouchHelper(SwipeHendler(this))
-        l.attachToRecyclerView(listView)
+        l.attachToRecyclerView(binding.plannerNameList)
 
-        add.setOnClickListener{
-            val addplannername = AddPlannerName{
+        binding.addPlannerBtn.setOnClickListener{
+            val addplannername = AddPlanner{
                 loadDataFromDb(adapter)
             }
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
@@ -67,7 +62,12 @@ class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
 //            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
 //        }
 
-        return view
+        return binding.root
+    }
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
     private fun loadDataFromDb(adapter: PlannerAdapter) {
         val dataList = mutableListOf<PlannerName_DTO>() // 데이터 타입에 맞게 수정

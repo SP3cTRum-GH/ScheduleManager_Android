@@ -49,7 +49,7 @@ class HomeCalListAdapter : BaseAdapter {
         var currentItem = items[p0]
 
         val checkBox: CheckBox = itemView!!.findViewById(R.id.checkBox)
-        val textView: TextView = itemView.findViewById(R.id.plannerName)
+        val textView: TextView = itemView.findViewById(R.id.calText)
 
         checkBox.isChecked = currentItem.done
         textView.text = currentItem.task

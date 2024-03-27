@@ -4,22 +4,22 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
+import com.example.kotlintest.databinding.TodolistItemBinding
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.db.PlannerName_DTO
-import com.example.kotlintest.settingplanner.PlannerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
+    private var _binding: TodolistItemBinding? = null
+    private val binding get() = _binding!!
     lateinit var mContext: Context
     var items: ArrayList<Calendar_DTO>
     var fm: FragmentManager
@@ -28,9 +28,12 @@ class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
         this.fm = fm
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarAdapter.CalenderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.todolist_item, parent, false)
-        mContext = view.context
-        return CalenderViewHolder(view)
+        _binding = TodolistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+//        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+//        val view = LayoutInflater.from(parent.context).inflate(R.layout.todolist_item, parent, false)
+//        mContext = view.context
+        mContext = binding.root.context
+        return CalenderViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: CalendarAdapter.CalenderViewHolder, position: Int) {
@@ -68,35 +71,8 @@ class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
         this.notifyDataSetChanged()
     }
 
-//    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-//        var itemView = convertView
-//        if (itemView == null) {
-//            itemView = LayoutInflater.from(context).inflate(R.layout.todolist_item, parent, false)
-//        }
-//
-//        var currentItem = items[position]
-//
-//        val checkBox: CheckBox = itemView!!.findViewById(R.id.checkBox)
-//        val textView: TextView = itemView.findViewById(R.id.plannerName)
-//
-//        checkBox.isChecked = currentItem.done
-//        textView.text = currentItem.task
-//        val db = AppDatabase.getDatabase(context)
-//        val calDao = db.calDao()
-//
-//        checkBox.setOnCheckedChangeListener { _, isChecked ->
-//            currentItem.done = !currentItem.done
-//            CoroutineScope(Dispatchers.Main).launch {
-//                val res = async(Dispatchers.IO) {
-//                    calDao.updateTaskForDate(currentItem)
-//                }
-//            }
-//        }
-//
-//        return itemView
-//    }
     inner class CalenderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val checkBox: CheckBox = itemView!!.findViewById(R.id.checkBox)
-        val textView: TextView = itemView.findViewById(R.id.plannerName)
+        val checkBox: CheckBox = binding.checkBox
+        val textView: TextView = binding.calText
     }
 }

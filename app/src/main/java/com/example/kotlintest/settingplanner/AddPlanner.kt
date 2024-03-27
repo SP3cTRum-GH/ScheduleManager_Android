@@ -7,54 +7,51 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.example.kotlintest.R
-import com.example.kotlintest.db.*
-import com.example.kotlintest.home.HomeAdapter
-import com.example.kotlintest.util.TimePicker
-import kotlinx.coroutines.*
+import com.example.kotlintest.databinding.FragmentAddPlannerBinding
+import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.db.PlannerName_DTO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class AddPlanner(val cb: (data: Home_DTO) -> Unit, val idx:Long) : DialogFragment() {
+class AddPlanner(val cb: () -> Unit) : DialogFragment() {
+    private var _binding: FragmentAddPlannerBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_add_planner, container, false)
-        val btnStart = view.findViewById<Button>(R.id.timeset_start)
-        val btnEnd = view.findViewById<Button>(R.id.timeset_end)
-        val button = view.findViewById<Button>(R.id.btnSave)
-        val task = view.findViewById<EditText>(R.id.editTask)
-        val tp = TimePicker(btnStart, btnEnd)
+        _binding = FragmentAddPlannerBinding.inflate(inflater, container, false)
 
         // 데이터베이스 인스턴스 얻기
         val db = AppDatabase.getDatabase(requireContext())
         // DAO 초기화
-        val homeDao = db.homeDao()
+        val plannerDao = db.plannerDao()
 
-        //시작시간
-        btnStart.setOnClickListener {
-            tp.setFlag(true)
-            tp.show(parentFragmentManager,"time Picker")
+        binding.apCancelBtn.setOnClickListener{
+            dismiss()
         }
 
-        //종료시간 시작시간보다 앞으로 갈수 없게끔 수정할 것
-        btnEnd.setOnClickListener {
-            tp.setFlag(false)
-            tp.show(parentFragmentManager,"time Picker")
-        }
+        binding.apSubmitBtn.setOnClickListener{
+            val plannerName = PlannerName_DTO(name = binding.plannerNameET.text.toString())
 
-        button.setOnClickListener{
-            val data = Home_DTO(starttime = tp.getStartTime(), endtime = tp.getEndTime(), task = task.text.toString(), name = idx)
             CoroutineScope(Dispatchers.Main).launch {
-                var ret = CoroutineScope(Dispatchers.IO).async {
-                    homeDao.insertPlanner(data)
+                withContext(Dispatchers.IO) {
+                    plannerDao.insertPlanner(plannerName)
+                    cb()
                 }
-                ret.await()
-                cb(data)
             }
             dismiss()
         }
-        return view
+
+        return binding.root
+    }
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

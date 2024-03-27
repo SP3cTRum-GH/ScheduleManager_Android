@@ -5,13 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CalendarView
-import android.widget.ListView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlintest.R
+import com.example.kotlintest.databinding.FragmentCalendarBinding
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DAO
 import com.example.kotlintest.db.Calendar_DTO
@@ -28,18 +24,15 @@ import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
 class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
-//    private lateinit var adapter: ArrayAdapter<String> // 데이터 타입에 맞게 수정
+    private var _binding: FragmentCalendarBinding? = null
+    private val binding get() = _binding!!
     private lateinit var calDao: Calendar_DAO // Room DAO
     private var selectedDate = ""
     private lateinit var adapter: CalendarAdapter
     lateinit var db: AppDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_calendar, container, false)
-        var btn = view.findViewById<Button>(R.id.add_task)
-        var cal = view.findViewById<CalendarView>(R.id.calendar)
-        var listView = view.findViewById<RecyclerView>(R.id.task)
-
+        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         // Room 데이터베이스 인스턴스 생성
         db = AppDatabase.getDatabase(requireContext())
 
@@ -50,14 +43,14 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
         // 데이터 가져오기
         var items:ArrayList<Calendar_DTO> = ArrayList()
         adapter = CalendarAdapter(parentFragmentManager)
-        listView.adapter = adapter
-        listView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.calTaskList.adapter = adapter
+        binding.calTaskList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         loadDataFromDb(adapter)
 
         val l = ItemTouchHelper(SwipeHendler(this))
-        l.attachToRecyclerView(listView)
+        l.attachToRecyclerView(binding.calTaskList)
         //선택한 날에 맞는 일정 불러오기
-        cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
+        binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
 
@@ -67,11 +60,11 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
         }
 
         //일정추가 -> Addtask 화면 띄우기
-        btn.setOnClickListener {
+        binding.calAddtaskBtn.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("date", selectedDate)
 
-            val addTask: AddTask = AddTask {
+            val addTask: CalendarAddtask = CalendarAddtask {
                 loadDataFromDb(adapter)
             }
             addTask.arguments = bundle
@@ -79,7 +72,13 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
         }
 
 
-        return view
+        return binding.root
+    }
+
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun loadDataFromDb(adapter: CalendarAdapter) {

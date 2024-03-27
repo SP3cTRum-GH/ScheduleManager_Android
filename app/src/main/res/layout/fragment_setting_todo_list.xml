@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context=".settingplanner.SettingPlanner">
     <Button
-        android:id="@+id/btnAddTodo"
+        android:id="@+id/addTodoBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="할일 추가"
@@ -18,7 +18,7 @@
         android:id="@+id/todoTaskList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddTodo"
+        app:layout_constraintBottom_toTopOf="@+id/addTodoBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

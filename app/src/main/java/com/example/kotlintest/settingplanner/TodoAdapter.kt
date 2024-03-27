@@ -4,15 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
-import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.databinding.StringlistBinding
 import com.example.kotlintest.db.TodoList_DTO
-import com.example.kotlintest.util.SwipeHendler
 
 class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoListViewHolder> {
+    private var _binding: StringlistBinding? = null
+    private val binding get() = _binding!!
     lateinit var mContext: Context
     var items: ArrayList<TodoList_DTO>
     constructor() {
@@ -63,13 +63,13 @@ override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
 }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.stringlist, parent, false)
-        mContext = view.context
-        return TodoListViewHolder(view)
+        _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        mContext = binding.root.context
+        return TodoListViewHolder(binding.root)
     }
 
     inner class TodoListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val todo: TextView = itemView.findViewById(R.id.plannerName)
+        val todo: TextView = binding.plannerNameText
     }
 
 }

@@ -11,10 +11,13 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
+import com.example.kotlintest.databinding.SettingplannerListviewBinding
 import com.example.kotlintest.db.Home_DTO
 
 
 class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.SettingPlannerViewHolder> {
+    private var _binding: SettingplannerListviewBinding? = null
+    private val binding get() = _binding!!
     var items: ArrayList<Home_DTO>
     var fm: FragmentManager
     lateinit var mContext: Context
@@ -91,14 +94,14 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingPlannerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.settingplanner_listview, parent, false)
-        mContext = view.context
-        return SettingPlannerViewHolder(view)
+        _binding = SettingplannerListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        mContext = binding.root.context
+        return SettingPlannerViewHolder(binding.root)
     }
 
     inner class SettingPlannerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val startTime: TextView = itemView.findViewById(R.id.spl_startTime)
-        val endTime: TextView = itemView.findViewById(R.id.spl_endTime)
-        val task: TextView = itemView.findViewById(R.id.spl_task)
+        val startTime: TextView = binding.splStartTime
+        val endTime: TextView = binding.splEndTime
+        val task: TextView = binding.splTask
     }
 }

@@ -6,16 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
-import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.kotlintest.R
-import com.example.kotlintest.calendar.CalendarAdapter
+import com.example.kotlintest.databinding.FragmentSelectPlannerBinding
 import com.example.kotlintest.db.*
 import java.util.concurrent.Executors
 
-class EditPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
+class SelectPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
+    private var _binding: FragmentSelectPlannerBinding? = null
+    private val binding get() = _binding!!
     private lateinit var plannerNameDao: PlannerName_DAO
     private lateinit var adapter: HomeAdapter
     private lateinit var view: View
@@ -26,11 +25,8 @@ class EditPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_edit_planner, container, false)
-        val plannerlist = view.findViewById<ListView>(R.id.plannerList)
-        plannerlist.choiceMode = ListView.CHOICE_MODE_SINGLE
-        val cancel = view.findViewById<Button>(R.id.cancel)
-        val save = view.findViewById<Button>(R.id.save)
+        _binding = FragmentSelectPlannerBinding.inflate(inflater, container, false)
+        binding.spPlannerList.choiceMode = ListView.CHOICE_MODE_SINGLE
 
         // Room 데이터베이스 인스턴스 생성
         val db = AppDatabase.getDatabase(requireContext())
@@ -39,24 +35,28 @@ class EditPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
         //데이터 가져오기
         var items = ArrayList<PlannerName_DTO>()
         adapter = HomeAdapter(requireContext(), items)
-        plannerlist.adapter = adapter
+        binding.spPlannerList.adapter = adapter
         loadDataFromDb(adapter)
 
-        plannerlist.setOnItemClickListener { adapterView, view, i, l ->
+        binding.spPlannerList.setOnItemClickListener { adapterView, view, i, l ->
             val position = adapterView.getItemAtPosition(i) as PlannerName_DTO
             selectedItem = position.index
         }
 
-        cancel.setOnClickListener{
+        binding.spCancelBtn.setOnClickListener{
             dismiss()
         }
 
-        save.setOnClickListener{
+        binding.spSubmitBtn.setOnClickListener{
             cb(selectedItem)
             dismiss()
         }
 
-        return view
+        return binding.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun loadDataFromDb(adapter: HomeAdapter) {

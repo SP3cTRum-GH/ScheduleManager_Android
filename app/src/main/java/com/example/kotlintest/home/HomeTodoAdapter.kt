@@ -9,7 +9,6 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.example.kotlintest.R
 import com.example.kotlintest.db.AppDatabase
-import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.TodoList_DTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +49,7 @@ class HomeTodoAdapter : BaseAdapter {
         var currentItem = items[p0]
 
         val checkBox: CheckBox = itemView!!.findViewById(R.id.checkBox)
-        val textView: TextView = itemView.findViewById(R.id.plannerName)
+        val textView: TextView = itemView.findViewById(R.id.calText)
 
         checkBox.isChecked = currentItem.done
         textView.text = currentItem.todo

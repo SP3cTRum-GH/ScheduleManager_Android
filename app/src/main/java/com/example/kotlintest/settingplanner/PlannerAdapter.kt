@@ -4,16 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
-import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.databinding.StringlistBinding
+import com.example.kotlintest.databinding.TodolistItemBinding
 import com.example.kotlintest.db.PlannerName_DTO
-import com.example.kotlintest.db.TodoList_DTO
 
 class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder> {
+    private var _binding: StringlistBinding? = null
+    private val binding get() = _binding!!
     lateinit var mContext: Context
     var items: ArrayList<PlannerName_DTO>
     var fm: FragmentManager
@@ -22,9 +23,9 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
         this.fm = fm
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlannerAdapter.PlannerNameViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.stringlist, parent, false)
-        mContext = view.context
-        return PlannerNameViewHolder(view)
+        _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        mContext = binding.root.context
+        return PlannerNameViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: PlannerAdapter.PlannerNameViewHolder, position: Int) {
@@ -58,6 +59,6 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
     }
 
     inner class PlannerNameViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val plannerName: TextView = itemView.findViewById(R.id.plannerName)
+        val plannerName: TextView = binding.plannerNameText
     }
 }

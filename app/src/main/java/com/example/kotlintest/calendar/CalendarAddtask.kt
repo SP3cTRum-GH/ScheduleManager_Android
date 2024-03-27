@@ -9,65 +9,62 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Switch
 import com.example.kotlintest.R
+import com.example.kotlintest.databinding.FragmentCalendarAddtaskBinding
 import com.example.kotlintest.util.TimePicker
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.*
 
-class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
+class CalendarAddtask(val cb: () -> Unit) : BottomSheetDialogFragment() {
+    private var _binding: FragmentCalendarAddtaskBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val selectedDateStr = arguments?.getString("date") ?: "" // 문자열로부터 날짜 문자열 가져옴
-        val view = inflater.inflate(R.layout.fragment_add_task, container, false)
-        val btnStart = view.findViewById<Button>(R.id.timeset_start)
-        val btnEnd = view.findViewById<Button>(R.id.timeset_end)
-        val btnSave = view.findViewById<Button>(R.id.btn_save)
-        val txtTask = view.findViewById<EditText>(R.id.task)
-        val allDayButton = view.findViewById<Switch>(R.id.allDays)
-        val startTimeArea = view.findViewById<LinearLayout>(R.id.startTimeLinearLayout)
-        val endTimeArea = view.findViewById<LinearLayout>(R.id.endTimeLinearLayout)
+        _binding = FragmentCalendarAddtaskBinding.inflate(inflater, container, false)
+
 
         // 데이터베이스 인스턴스 얻기
         val db = AppDatabase.getDatabase(requireContext())
         // DAO 초기화
         val calDao = db.calDao()
 
-        val tp = TimePicker(btnStart, btnEnd)
+        val tp = TimePicker(binding.setStarttimeBtn, binding.setEndtimeBtn)
 
-        allDayButton.setOnCheckedChangeListener { compoundButton, onSwitch ->
+        binding.allDaysSwitch.setOnCheckedChangeListener { compoundButton, onSwitch ->
             if(onSwitch){
-                endTimeArea.visibility = View.GONE
-                startTimeArea.visibility = View.GONE
+                binding.endTimeLinearLayout.visibility = View.GONE
+                binding.startTimeLinearLayout.visibility = View.GONE
             }
             else{
-                endTimeArea.visibility = View.VISIBLE
-                startTimeArea.visibility = View.VISIBLE
+                binding.endTimeLinearLayout.visibility = View.VISIBLE
+                binding.startTimeLinearLayout.visibility = View.VISIBLE
             }
         }
         //시작시간
-        btnStart.setOnClickListener {
+        binding.setStarttimeBtn.setOnClickListener {
             tp.setFlag(true)
             tp.show(parentFragmentManager,"time Picker")
         }
 
         //종료시간 시작시간보다 앞으로 갈수 없게끔 수정할 것
-        btnEnd.setOnClickListener {
+        binding.setEndtimeBtn.setOnClickListener {
             tp.setFlag(false)
             tp.show(parentFragmentManager,"time Picker")
         }
 
         //데이터베이스에 일정저장
-        btnSave.setOnClickListener {
+        binding.calATSaveBtn.setOnClickListener {
             var task:Calendar_DTO
-            if(allDayButton.isChecked){
-                task = Calendar_DTO(date= selectedDateStr , task = txtTask.text.toString(), endtime = "23 : 59", starttime = "00 : 00")
+            if(binding.allDaysSwitch.isChecked){
+                task = Calendar_DTO(date= selectedDateStr , task = binding.calTaskET.text.toString(), endtime = "23 : 59", starttime = "00 : 00")
             }
             else {
-                task = Calendar_DTO(date = selectedDateStr, task = txtTask.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime()
+                task = Calendar_DTO(date = selectedDateStr, task = binding.calTaskET.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime()
                 )
             }
 //            CoroutineScope(Dispatchers.Main).launch {
@@ -86,6 +83,12 @@ class AddTask(val cb: () -> Unit) : BottomSheetDialogFragment() {
 
             dismiss()
         }
-        return view
+        return binding.root
+    }
+
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
