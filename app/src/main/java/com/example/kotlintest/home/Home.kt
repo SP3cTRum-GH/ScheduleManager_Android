@@ -6,32 +6,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import com.example.kotlintest.databinding.FragmentHomeBinding
+import com.example.kotlintest.util.CalLivedata
+import com.example.kotlintest.util.PlannerLivedata
 
-class Home : Fragment() {
+class Home(val plannerLivedata: PlannerLivedata, val calLivedata: CalLivedata) : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var idx: Long = -1
     private lateinit var adapter: HomeSharedAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 //        var view = inflater.inflate(R.layout.fragment_home, container, false)
 
         adapter = HomeSharedAdapter(requireContext(), binding.homePlannerChart)
-        binding.homeCalTodoList.adapter = adapter.getListAdapter()
-        binding.homeCurrentTodoList.adapter = adapter.getTodoAdapter()
+        binding.homeCalTodoList.adapter = adapter.listAdapter
+        binding.homeCurrentTodoList.adapter = adapter.todoAdapter
+
+        //옵저빙
+        plannerLivedata.repo._homelist.observe(viewLifecycleOwner, Observer {
+            adapter.setHomelist(it)
+        })
+        plannerLivedata.repo._todolist.observe(viewLifecycleOwner, Observer {
+            adapter.setTodolist(it)
+        })
+        calLivedata.repo._callist.observe(viewLifecycleOwner, Observer {
+            adapter.setCallist(it)
+        })
 
         //시간표 변경
         binding.selectPlannerFAB.setOnClickListener{
-            val changeplanner = SelectPlannerFragment({
-                adapter.idx = it
-                adapter.loadDataFromDb()})
+            val changeplanner = SelectPlannerFragment(plannerLivedata)
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
             transaction.addToBackStack(null)
 

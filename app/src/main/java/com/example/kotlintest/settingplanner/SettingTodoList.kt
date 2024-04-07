@@ -55,7 +55,12 @@ class SettingTodoList(val plannerinfo: Home_DTO):Fragment(), SwipeHendler.OnItem
             addTodoTask.show(transaction,addTodoTask.tag)
         }
 
-        return view
+        return binding.root
+    }
+    //메모리 누수 막기위해 뷰가없어질때 바인딩 해제
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun loadDataFromDb(adapter: TodoAdapter) {

@@ -33,11 +33,11 @@ class PlannerDataStructure {
     }
 
     private fun makeBlank(i1: Int, i2: Int) {
-        val end = blankdatalist[i1].endtime.split(" : ")
-        val t1 = end[0].toInt() * 60 + end[1].toInt()
+        val t1 = blankdatalist[i1].endtime
+//        val t1 = end[0].toInt() * 60 + end[1].toInt()
 
-        val start = blankdatalist[i2].starttime.split(" : ")
-        val t2 = start[0].toInt() * 60 + start[1].toInt()
+        val t2 = blankdatalist[i2].starttime
+//        val t2 = start[0].toInt() * 60 + start[1].toInt()
 
         if(t1 - t2 != 0) {
             blankdatalist.add(Home_DTO(starttime = blankdatalist[i1].endtime, endtime = blankdatalist[i2].starttime, task = "", name = -1))
@@ -54,11 +54,11 @@ class PlannerDataStructure {
         }
 
         for(i in blankdatalist){
-            val end = i.endtime.split(" : ")
-            var t1 = end[0].toInt() * 60 + end[1].toInt()
+            var t1 = i.endtime
+//            var t1 = end[0].toInt() * 60 + end[1].toInt()
 
-            val start = i.starttime.split(" : ")
-            val t2 = start[0].toInt() * 60 + start[1].toInt()
+            var t2 = i.starttime
+//            val t2 = start[0].toInt() * 60 + start[1].toInt()
 
             if(t2 >= t1) t1 += 1440
             val persent = (t1-t2)/1440f*100

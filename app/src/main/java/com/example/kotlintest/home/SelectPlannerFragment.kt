@@ -10,14 +10,14 @@ import androidx.fragment.app.DialogFragment
 import com.example.kotlintest.R
 import com.example.kotlintest.databinding.FragmentSelectPlannerBinding
 import com.example.kotlintest.db.*
+import com.example.kotlintest.util.PlannerLivedata
 import java.util.concurrent.Executors
 
-class SelectPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
+class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragment() {
     private var _binding: FragmentSelectPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var plannerNameDao: PlannerName_DAO
     private lateinit var adapter: HomeAdapter
-    private lateinit var view: View
     var selectedItem: Long = -1
 
     override fun onCreateView(
@@ -48,7 +48,7 @@ class SelectPlannerFragment(val cb: (Long) -> Unit) : DialogFragment() {
         }
 
         binding.spSubmitBtn.setOnClickListener{
-            cb(selectedItem)
+            plannerLivedata.getAllPlanner(selectedItem)
             dismiss()
         }
 

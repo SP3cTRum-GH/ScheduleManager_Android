@@ -65,8 +65,8 @@ class SharedAdapter :SwipeHendler.OnItemMoveListener {
         val data = PieData(dataSet)
         data.setValueTextSize(0f)
         if(listitem.isNotEmpty()) {
-            val start = listitem[0].starttime.split(" : ")
-            val min = start[0].toInt() * 60 + start[1].toInt()
+            val min = listitem[0].starttime
+//            val min = start[0].toInt() * 60 + start[1].toInt()
 
             piechart.rotationAngle = -90f + (min * 0.25f)
         }

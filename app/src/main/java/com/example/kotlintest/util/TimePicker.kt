@@ -17,8 +17,8 @@ class TimePicker() : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private var startBtn: Button? = null
     private var endBtn: Button? = null
-    private var startTime: String = ""
-    private var endTime: String = ""
+    private var startTime: Int = 0
+    private var endTime: Int = 0
     private var isStart = true
 
     constructor(startBtn: Button?, endBtn: Button?) : this() {
@@ -38,10 +38,10 @@ class TimePicker() : BottomSheetDialogFragment() {
         this.isStart = isStart
     }
 
-    fun getStartTime():String{
+    fun getStartTime():Int{
         return startTime
     }
-    fun getEndTime():String{
+    fun getEndTime():Int{
         return endTime
     }
 
@@ -58,14 +58,17 @@ class TimePicker() : BottomSheetDialogFragment() {
         }
 
         binding.tpOkbtn.setOnClickListener {
+            val st = String.format("%02d", binding.timePicker.hour) +" : " +String.format("%02d", binding.timePicker.minute)
+
             if(isStart) {
-                this.startTime = String.format("%02d", binding.timePicker.hour) +" : " +String.format("%02d", binding.timePicker.minute)
-                this.startBtn?.setText(startTime)
-                this.endTime = String.format("%02d", binding.timePicker.hour + 1) + " : " +String.format("%02d", binding.timePicker.minute)
-                this.endBtn?.setText(endTime)
+                val end = String.format("%02d", binding.timePicker.hour + 1) +" : " +String.format("%02d", binding.timePicker.minute)
+                this.startTime = binding.timePicker.hour * 60 + binding.timePicker.minute
+                this.startBtn?.setText(st)
+                this.endTime = startTime + 60
+                this.endBtn?.setText(end)
             } else {
-                this.endTime = String.format("%02d", binding.timePicker.hour) +" : " +String.format("%02d", binding.timePicker.minute)
-                this.endBtn?.setText(endTime)
+                this.endTime = binding.timePicker.hour * 60 + binding.timePicker.minute
+                this.endBtn?.setText(st)
             }
 
             dismiss()

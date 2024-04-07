@@ -10,7 +10,7 @@ data class Calendar_DTO (
     @PrimaryKey(autoGenerate = true) val index: Long = 0,
     @ColumnInfo(name = "date")val date: String,
     @ColumnInfo(name = "task") val task: String,
-    @ColumnInfo(name = "starttime") val starttime: String,
-    @ColumnInfo(name = "endtime") val endtime: String,
+    @ColumnInfo(name = "starttime") val starttime: Int,
+    @ColumnInfo(name = "endtime") val endtime: Int,
     @ColumnInfo(name = "done") var done: Boolean = false
 )

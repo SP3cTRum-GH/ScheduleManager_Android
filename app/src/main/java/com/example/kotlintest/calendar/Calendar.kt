@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.databinding.FragmentCalendarBinding
-import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DAO
 import com.example.kotlintest.db.Calendar_DTO
+import com.example.kotlintest.util.CalLivedata
+import com.example.kotlintest.util.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,32 +21,28 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import java.util.Calendar
-import java.util.concurrent.Executors
+import androidx.lifecycle.Observer
 import kotlin.collections.ArrayList
 
-class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
+class Calendar(val calLivedata: CalLivedata) : Fragment(), SwipeHendler.OnItemMoveListener {
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
-    private lateinit var calDao: Calendar_DAO // Room DAO
     private var selectedDate = ""
     private lateinit var adapter: CalendarAdapter
-    lateinit var db: AppDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
-        // Room 데이터베이스 인스턴스 생성
-        db = AppDatabase.getDatabase(requireContext())
-
-        // Room DAO 초기화
-        calDao = db.calDao()
 
         selectedDate = LocalDate.now().toString()
         // 데이터 가져오기
-        var items:ArrayList<Calendar_DTO> = ArrayList()
         adapter = CalendarAdapter(parentFragmentManager)
         binding.calTaskList.adapter = adapter
         binding.calTaskList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        loadDataFromDb(adapter)
+
+        calLivedata.repo._callist.observe(viewLifecycleOwner, Observer {
+            adapter.clear()
+            adapter.addAll(it)
+        })
 
         val l = ItemTouchHelper(SwipeHendler(this))
         l.attachToRecyclerView(binding.calTaskList)
@@ -56,7 +53,6 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             selectedDate = dateFormat.format(calendar.time)
-            loadDataFromDb(adapter)
         }
 
         //일정추가 -> Addtask 화면 띄우기
@@ -64,9 +60,7 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
             val bundle = Bundle()
             bundle.putString("date", selectedDate)
 
-            val addTask: CalendarAddtask = CalendarAddtask {
-                loadDataFromDb(adapter)
-            }
+            val addTask = CalendarAddtask(calLivedata)
             addTask.arguments = bundle
             activity?.let { it1 -> addTask.show(it1.supportFragmentManager, addTask.tag) }
         }
@@ -80,35 +74,8 @@ class Calendar : Fragment(), SwipeHendler.OnItemMoveListener {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun loadDataFromDb(adapter: CalendarAdapter) {
-        val dataList = mutableListOf<Calendar_DTO>()
-
-        // 백그라운드 스레드에서 실행
-        Executors.newSingleThreadExecutor().execute {
-            val data = calDao.getAllTaskForDate(selectedDate) // Room DAO에서 데이터 가져오기
-
-            // 가져온 데이터 처리
-            for (item in data) {
-                dataList.add(item)
-            }
-
-            // UI 갱신
-            requireActivity().runOnUiThread {
-                adapter.clear()
-                adapter.addAll(dataList)
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
     override fun swiped(position: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-            var d = adapter.items[position]
-            adapter.items.removeAt(position)
-
-            CoroutineScope(Dispatchers.IO).async {
-                db.calDao().deletetable(d)
-            }
-        }
+        var d = adapter.items[position]
+        calLivedata.removeCalendarTable(d)
     }
 }

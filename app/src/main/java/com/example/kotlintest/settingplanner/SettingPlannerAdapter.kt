@@ -81,8 +81,8 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     override fun onBindViewHolder(holder: SettingPlannerViewHolder, position: Int) {
         var currentItem = items[position]
 
-        holder.startTime.text = currentItem.starttime
-        holder.endTime.text = currentItem.endtime
+        holder.startTime.text = String.format("%02d", currentItem.starttime / 60) + " : " + String.format("%02d", currentItem.starttime % 60)
+        holder.endTime.text = String.format("%02d", currentItem.endtime / 60) + " : " + String.format("%02d", currentItem.endtime % 60)
         holder.task.text = currentItem.task
 
         holder.task.setOnClickListener {

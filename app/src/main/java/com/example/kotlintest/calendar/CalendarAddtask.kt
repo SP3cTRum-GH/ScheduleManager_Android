@@ -13,10 +13,11 @@ import com.example.kotlintest.databinding.FragmentCalendarAddtaskBinding
 import com.example.kotlintest.util.TimePicker
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
+import com.example.kotlintest.util.CalLivedata
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.*
 
-class CalendarAddtask(val cb: () -> Unit) : BottomSheetDialogFragment() {
+class CalendarAddtask(val calLivedata: CalLivedata) : BottomSheetDialogFragment() {
     private var _binding: FragmentCalendarAddtaskBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -27,14 +28,9 @@ class CalendarAddtask(val cb: () -> Unit) : BottomSheetDialogFragment() {
         val selectedDateStr = arguments?.getString("date") ?: "" // 문자열로부터 날짜 문자열 가져옴
         _binding = FragmentCalendarAddtaskBinding.inflate(inflater, container, false)
 
-
-        // 데이터베이스 인스턴스 얻기
-        val db = AppDatabase.getDatabase(requireContext())
-        // DAO 초기화
-        val calDao = db.calDao()
-
         val tp = TimePicker(binding.setStarttimeBtn, binding.setEndtimeBtn)
 
+        //종일 스위치 켜지면 타임피커 비활성화
         binding.allDaysSwitch.setOnCheckedChangeListener { compoundButton, onSwitch ->
             if(onSwitch){
                 binding.endTimeLinearLayout.visibility = View.GONE
@@ -61,26 +57,13 @@ class CalendarAddtask(val cb: () -> Unit) : BottomSheetDialogFragment() {
         binding.calATSaveBtn.setOnClickListener {
             var task:Calendar_DTO
             if(binding.allDaysSwitch.isChecked){
-                task = Calendar_DTO(date= selectedDateStr , task = binding.calTaskET.text.toString(), endtime = "23 : 59", starttime = "00 : 00")
+                task = Calendar_DTO(date= selectedDateStr , task = binding.calTaskET.text.toString(), endtime = 1439, starttime = 0)
             }
             else {
                 task = Calendar_DTO(date = selectedDateStr, task = binding.calTaskET.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime()
                 )
             }
-//            CoroutineScope(Dispatchers.Main).launch {
-//                val res = async(Dispatchers.IO) {
-//                    calDao.insertTaskForDate(task)
-//                }
-//                println(res)
-//            }
-
-            CoroutineScope(Dispatchers.Main).launch {
-                withContext(Dispatchers.IO) {
-                    calDao.insertTaskForDate(task)
-                    cb()
-                }
-            }
-
+            calLivedata.insertTaskForDate(task)
             dismiss()
         }
         return binding.root

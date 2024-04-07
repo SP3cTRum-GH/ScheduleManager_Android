@@ -7,37 +7,27 @@ import com.github.mikephil.charting.data.PieEntry
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class HomeDataStructure {
-    private var homelist: ArrayList<Home_DTO>
-    private var callist: ArrayList<Calendar_DTO>
-    private var todolist: ArrayList<TodoList_DTO>
-    private var homeCalTodoList: ArrayList<Calendar_DTO>
-    private var blankdatalist: ArrayList<Home_DTO>
-    private var pieList: ArrayList<PieEntry>//1min angle 0.25
+class HomeDataStructure(var homelist: ArrayList<Home_DTO>,
+                        var callist: ArrayList<Calendar_DTO>,
+                        var todolist: ArrayList<TodoList_DTO>,
+                        ){
+    var blankdatalist: ArrayList<Home_DTO>
+    var homeCalTodoList: ArrayList<Calendar_DTO>
+    var pieList: ArrayList<PieEntry>//1min angle 0.25
 
-    constructor(home:ArrayList<Home_DTO>, calendar:ArrayList<Calendar_DTO>, todo:ArrayList<TodoList_DTO>) {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("HH : mm")
-        val formatted = current.format(formatter).toString().split(" : ")
-        val t = formatted[0].toInt() * 60 + formatted[1].toInt()
-
-        homelist = home
-        sorter(homelist)
-        blankdatalist = ArrayList(homelist)
-        callist = calendar
+    init {
+        blankdatalist = ArrayList()
         homeCalTodoList = ArrayList()
-        caltodoCurrentTime(callist,t)
-        todolist = todo
         pieList = ArrayList()
-        addBlank()
     }
+    constructor() : this(ArrayList(),ArrayList(),ArrayList())
 
     private fun makeBlank(i1: Int, i2: Int) {
-        val end = blankdatalist[i1].endtime.split(" : ")
-        val t1 = end[0].toInt() * 60 + end[1].toInt()
+        val t1 = blankdatalist[i1].endtime
+//        val t1 = end[0].toInt() * 60 + end[1].toInt()
 
-        val start = blankdatalist[i2].starttime.split(" : ")
-        val t2 = start[0].toInt() * 60 + start[1].toInt()
+        val t2 = blankdatalist[i2].starttime
+//        val t2 = start[0].toInt() * 60 + start[1].toInt()
 
         if(t1 - t2 != 0) {
             blankdatalist.add(Home_DTO(starttime = blankdatalist[i1].endtime, endtime = blankdatalist[i2].starttime, task = "", name = -1))
@@ -54,11 +44,11 @@ class HomeDataStructure {
         }
 
         for(i in blankdatalist){
-            val end = i.endtime.split(" : ")
-            var t1 = end[0].toInt() * 60 + end[1].toInt()
+            var t1 = i.endtime
+//            var t1 = end[0].toInt() * 60 + end[1].toInt()
 
-            val start = i.starttime.split(" : ")
-            val t2 = start[0].toInt() * 60 + start[1].toInt()
+            var t2 = i.starttime
+//            val t2 = start[0].toInt() * 60 + start[1].toInt()
 
             if(t2 >= t1) t1 += 1440
             val persent = (t1-t2)/1440f*100
@@ -69,11 +59,11 @@ class HomeDataStructure {
 
     private fun caltodoCurrentTime(list:ArrayList<Calendar_DTO>,t:Int){
         for(i in list){
-            val start = i.starttime.split(" : ")
-            val t1 = start[0].toInt() * 60 + start[1].toInt()
+            var t1 = i.starttime
+//            val t1 = start[0].toInt() * 60 + start[1].toInt()
 
-            val end = i.endtime.split(" : ")
-            var t2 = end[0].toInt() * 60 + end[1].toInt()
+            var t2 = i.endtime
+//            var t2 = end[0].toInt() * 60 + end[1].toInt()
 
             if(t1<=t && t<=t2){
                 homeCalTodoList.add(i)
@@ -85,19 +75,11 @@ class HomeDataStructure {
         sortinglist.sortBy { it.starttime }
     }
 
-    fun getPieItems(): ArrayList<Home_DTO>{
-        return homelist
-    }
-
-    fun getDatalist(): ArrayList<Calendar_DTO> {
-        return homeCalTodoList
-    }
-
-    fun getTodoList(): ArrayList<TodoList_DTO>{
-        return todolist
-    }
-
-    fun getPieList(): ArrayList<PieEntry> {
-        return pieList
+    fun setPieItems() {
+        sorter(homelist)
+        blankdatalist = ArrayList(homelist)
+        homeCalTodoList = ArrayList()
+        pieList = ArrayList()
+        addBlank()
     }
 }

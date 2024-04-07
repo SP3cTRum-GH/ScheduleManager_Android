@@ -7,6 +7,9 @@ interface Home_DAO {
     @Query("SELECT * FROM home WHERE name = :name")
     fun getAllPlanner(name:Long): List<Home_DTO>
 
+    @Query("SELECT * FROM home")
+    fun getAllPlanner(): List<Home_DTO>
+
     @Insert
     fun insertPlanner(task: Home_DTO)
 

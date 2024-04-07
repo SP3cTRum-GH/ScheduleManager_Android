@@ -12,6 +12,8 @@ import com.example.kotlintest.databinding.FragmentSettingPlannerBinding
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.PlannerName_DAO
 import com.example.kotlintest.db.PlannerName_DTO
+import com.example.kotlintest.util.CalLivedata
+import com.example.kotlintest.util.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +21,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
+class SettingPlanner(val plannerLivedata: PlannerLivedata) : Fragment(), SwipeHendler.OnItemMoveListener {
     private var _binding: FragmentSettingPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var plannerDao: PlannerName_DAO // Room DAO
