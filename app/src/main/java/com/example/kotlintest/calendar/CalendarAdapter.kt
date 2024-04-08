@@ -12,6 +12,7 @@ import com.example.kotlintest.R
 import com.example.kotlintest.databinding.TodolistItemBinding
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
+import com.example.kotlintest.util.CalLivedata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,9 +24,12 @@ class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
     lateinit var mContext: Context
     var items: ArrayList<Calendar_DTO>
     var fm: FragmentManager
-    constructor(fm: FragmentManager) {
+    var calLivedata: CalLivedata
+
+    constructor(fm: FragmentManager, calLivedata: CalLivedata) {
         this.items = ArrayList()
         this.fm = fm
+        this.calLivedata = calLivedata
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarAdapter.CalenderViewHolder {
         _binding = TodolistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -41,16 +45,10 @@ class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
 
         holder.checkBox.isChecked = currentItem.done
         holder.textView.text = currentItem.task
-        val db = AppDatabase.getDatabase(mContext)
-        val calDao = db.calDao()
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             currentItem.done = !currentItem.done
-            CoroutineScope(Dispatchers.Main).launch {
-                val res = async(Dispatchers.IO) {
-                    calDao.updateTaskForDate(currentItem)
-                }
-            }
+            calLivedata.updateTaskForDate(currentItem)
         }
     }
 

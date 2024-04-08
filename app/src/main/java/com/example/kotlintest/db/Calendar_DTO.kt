@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "calendar")
 data class Calendar_DTO (
-    @PrimaryKey(autoGenerate = true) val index: Long = 0,
+    @PrimaryKey(autoGenerate = true) val index: Int = 0,
     @ColumnInfo(name = "date")val date: String,
     @ColumnInfo(name = "task") val task: String,
     @ColumnInfo(name = "starttime") val starttime: Int,

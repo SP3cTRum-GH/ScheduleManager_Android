@@ -40,6 +40,14 @@ class CalLivedata: ViewModel {
         }
     }
 
+    fun updateTaskForDate(item: Calendar_DTO) {
+        val tmp = repo._callist.value!!
+        tmp.get(item.index).done = item.done
+        CoroutineScope(Dispatchers.IO).async {
+            _db.calDao().updateTaskForDate(item)
+        }
+    }
+
     fun getAllTaskForDate(date: String) {
         val tasks = ArrayList<Calendar_DTO>()
 

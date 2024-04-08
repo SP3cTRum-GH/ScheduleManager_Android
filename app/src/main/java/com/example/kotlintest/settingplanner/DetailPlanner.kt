@@ -39,6 +39,7 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO) : Fragment() {
         val l = ItemTouchHelper(SwipeHendler(sharedAdapter))
         l.attachToRecyclerView(binding.detailPlanList)
 
+        //일정추가
         binding.dpAddPlanBtn.setOnClickListener{
             val fu: (Home_DTO) -> Unit = {data -> sharedAdapter.addData(data)}
             val addSchedule = AddPlan(fu, plannerinfo.index)
@@ -46,12 +47,6 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO) : Fragment() {
 //            transaction.add(EditPlannerFragment(), EditPlannerFragment().tag).commit()
             addSchedule.show(transaction,addSchedule.tag)
         }
-
-//        listView.setOnItemClickListener { parent, view, position, id ->
-//            val selectedItem = parent.getItemAtPosition(position) as Home_DTO
-//            val fragment = SettingTodoList(selectedItem)
-//            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
-//        }
 
         return binding.root
     }

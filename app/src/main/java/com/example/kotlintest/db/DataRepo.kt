@@ -7,8 +7,9 @@ import java.time.format.DateTimeFormatter
 
 class DataRepo(var _homelist: MutableLiveData<ArrayList<Home_DTO>>,
                var _callist: MutableLiveData<ArrayList<Calendar_DTO>>,
-               var _todolist: MutableLiveData<ArrayList<TodoList_DTO>>) {
+               var _todolist: MutableLiveData<ArrayList<TodoList_DTO>>,
+               var _plannerNamelist: MutableLiveData<ArrayList<PlannerName_DTO>>) {
 
-    constructor() : this(MutableLiveData(ArrayList()), MutableLiveData(ArrayList()), MutableLiveData(ArrayList()))
+    constructor() : this(MutableLiveData(ArrayList()), MutableLiveData(ArrayList()), MutableLiveData(ArrayList()),MutableLiveData(ArrayList()))
 
 }

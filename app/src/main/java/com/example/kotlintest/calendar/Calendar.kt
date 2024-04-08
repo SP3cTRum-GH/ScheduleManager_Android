@@ -35,7 +35,7 @@ class Calendar(val calLivedata: CalLivedata) : Fragment(), SwipeHendler.OnItemMo
 
         selectedDate = LocalDate.now().toString()
         // 데이터 가져오기
-        adapter = CalendarAdapter(parentFragmentManager)
+        adapter = CalendarAdapter(parentFragmentManager,calLivedata)
         binding.calTaskList.adapter = adapter
         binding.calTaskList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -53,6 +53,7 @@ class Calendar(val calLivedata: CalLivedata) : Fragment(), SwipeHendler.OnItemMo
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             selectedDate = dateFormat.format(calendar.time)
+            calLivedata.getAllTaskForDate(selectedDate)
         }
 
         //일정추가 -> Addtask 화면 띄우기

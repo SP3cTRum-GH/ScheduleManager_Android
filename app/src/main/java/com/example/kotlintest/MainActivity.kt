@@ -11,6 +11,7 @@ import com.example.kotlintest.setting.Setting
 import com.example.kotlintest.util.CalLivedata
 import com.example.kotlintest.util.PlannerLivedata
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _plannerLivedata: PlannerLivedata
@@ -24,11 +25,13 @@ class MainActivity : AppCompatActivity() {
         _plannerLivedata = ViewModelProvider(this, LiveDataFactory(applicationContext)).get(PlannerLivedata::class.java)
         _calLivedata = ViewModelProvider(this, LiveDataFactory(applicationContext)).get(CalLivedata::class.java)
 
+
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavi)
         supportFragmentManager.beginTransaction().add(R.id.frameLayout, Home(_plannerLivedata,_calLivedata)).commit()
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
+                    _calLivedata.getAllTaskForDate(LocalDate.now().toString())
                     frag = Home(_plannerLivedata,_calLivedata)
                 }
                 R.id.calinder -> {

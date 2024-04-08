@@ -48,7 +48,7 @@ class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragme
         }
 
         binding.spSubmitBtn.setOnClickListener{
-            plannerLivedata.getAllPlanner(selectedItem)
+            plannerLivedata.getAllPlan(selectedItem)
             dismiss()
         }
 

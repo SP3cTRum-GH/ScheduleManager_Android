@@ -18,45 +18,8 @@ class PlannerLivedata : ViewModel{
     constructor(context: Context) {
         this._db = AppDatabase.getDatabase(context)
     }
-
-    // 전체 데이터 DB에서 불러오기
-    fun loadDataFromDb() {
-        CoroutineScope(Dispatchers.Main).launch {
-            var home: ArrayList<Home_DTO> = ArrayList()
-            var cal: ArrayList<Calendar_DTO> = ArrayList()
-            var todo: ArrayList<TodoList_DTO> = ArrayList()
-            var todoindex:Long = -1
-            val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("HH : mm")
-            val formatted = current.format(formatter).toString().split(" : ")
-            val t = formatted[0].toInt() * 60 + formatted[1].toInt()
-            val ret = CoroutineScope(Dispatchers.IO).async {
-                home.addAll(_db.homeDao().getAllPlanner())
-                cal.addAll(_db.calDao().getAllTaskForDate(LocalDate.now().toString()))
-
-                for(i in home){
-                    val start = i.starttime
-                    val end = i.endtime
-
-                    if(start<=t && t<=end){
-                        todoindex = i.index
-                        break
-                    }
-                }
-            }
-
-            if(home.isNotEmpty()) {
-                todo.addAll(_db.todoDao().getAllTodo(todoindex))
-            }
-            ret.await()
-
-            repo._homelist.value = home
-            repo._todolist.value = todo
-        }
-    }
-
     //Planner데이터 처리
-    fun getAllPlanner(idx: Long) {
+    fun getAllPlan(idx: Long) {
         val home = ArrayList<Home_DTO>()
         val todo = ArrayList<TodoList_DTO>()
         var todoindex: Long = -1
@@ -87,5 +50,23 @@ class PlannerLivedata : ViewModel{
             repo._homelist.value = home
             repo._todolist.value = todo
         }
+    }
+
+    fun getAllPlanner(){
+        val plannerName = ArrayList<PlannerName_DTO>()
+        CoroutineScope(Dispatchers.Main).launch {
+            val ret = CoroutineScope(Dispatchers.IO).async {
+                plannerName.addAll(_db.plannerDao().getAllPlanner())
+            }
+            ret.await()
+            repo._plannerNamelist.value = plannerName
+        }
+    }
+
+    fun insertPlanner(){
+
+    }
+    fun removePlanner(){
+
     }
 }
