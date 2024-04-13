@@ -1,36 +1,27 @@
 package com.example.kotlintest.settingplanner
 
+import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.db.TodoList_DTO
 import com.example.kotlintest.home.Home
 import com.github.mikephil.charting.data.PieEntry
 
-class PlannerDataStructure {
-    private var datalist: ArrayList<Home_DTO>
-    private var blankdatalist: ArrayList<Home_DTO>
-    private var pieList: ArrayList<PieEntry>//1min angle 0.25
+class PlannerDataStructure(var datalist: ArrayList<Home_DTO>){
+    var blankdatalist: ArrayList<Home_DTO>
+    var pieList: ArrayList<PieEntry>//1min angle 0.25
 
-    constructor(arg_list:ArrayList<Home_DTO>) {
-        datalist = ArrayList(arg_list)
-        sorter(datalist)
-        blankdatalist = ArrayList(datalist)
+    init {
+        blankdatalist = ArrayList()
         pieList = ArrayList()
-        addBlank()
     }
+    constructor(): this(ArrayList())
 
-    fun addData(data: Home_DTO) {
-        datalist.add(data)
-        sorter(datalist)
-        blankdatalist = ArrayList(datalist)
-        pieList = ArrayList()
-        addBlank()
-    }
-
-    fun deleteData(data: Int) {
-        datalist.removeAt(data)
-        blankdatalist = ArrayList(datalist)
-        pieList.clear()
-        addBlank()
-    }
+//    fun deleteData(data: Int) {
+//        datalist.removeAt(data)
+//        blankdatalist = ArrayList(datalist)
+//        pieList.clear()
+//        addBlank()
+//    }
 
     private fun makeBlank(i1: Int, i2: Int) {
         val t1 = blankdatalist[i1].endtime
@@ -72,15 +63,10 @@ class PlannerDataStructure {
         sortinglist.sortBy { it.starttime }
     }
 
-    fun getBlankdataList(): ArrayList<Home_DTO> {
-        return blankdatalist
-    }
-
-    fun getDatalist(): ArrayList<Home_DTO> {
-        return datalist
-    }
-
-    fun getPieList(): ArrayList<PieEntry> {
-        return pieList
+    fun setPieItems() {
+        sorter(datalist)
+        blankdatalist = ArrayList(datalist)
+        pieList = ArrayList()
+        addBlank()
     }
 }

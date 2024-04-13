@@ -4,18 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Switch
-import com.example.kotlintest.R
 import com.example.kotlintest.databinding.FragmentCalendarAddtaskBinding
 import com.example.kotlintest.util.TimePicker
-import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.util.CalLivedata
+import com.example.kotlintest.livedata.CalLivedata
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.*
 
 class CalendarAddtask(val calLivedata: CalLivedata) : BottomSheetDialogFragment() {
     private var _binding: FragmentCalendarAddtaskBinding? = null

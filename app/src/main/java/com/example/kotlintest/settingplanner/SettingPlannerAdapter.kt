@@ -1,18 +1,15 @@
 package com.example.kotlintest.settingplanner
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.databinding.SettingplannerListviewBinding
 import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.livedata.PlannerLivedata
 
 
 class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.SettingPlannerViewHolder> {
@@ -20,11 +17,13 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     private val binding get() = _binding!!
     var items: ArrayList<Home_DTO>
     var fm: FragmentManager
-    lateinit var mContext: Context
+    var plannerLivedata: PlannerLivedata
+//    lateinit var mContext: Context
 
-    constructor(fm: FragmentManager) {
+    constructor(fm: FragmentManager, plannerLiveData: PlannerLivedata) {
         this.items = ArrayList()
         this.fm = fm
+        this.plannerLivedata = plannerLiveData
     }
 
 //    override fun getCount(): Int {
@@ -87,7 +86,7 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
 
         holder.task.setOnClickListener {
             val selectedItem = items[position]
-            val fragment = SettingTodoList(selectedItem)
+            val fragment = SettingTodoList(selectedItem,plannerLivedata)
 
             fm.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
         }
@@ -95,7 +94,7 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingPlannerViewHolder {
         _binding = SettingplannerListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        mContext = binding.root.context
+//        mContext = binding.root.context
         return SettingPlannerViewHolder(binding.root)
     }
 

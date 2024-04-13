@@ -1,10 +1,10 @@
-package com.example.kotlintest.util
+package com.example.kotlintest.livedata
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.db.DataRepo
+import com.example.kotlintest.livedata.DataRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

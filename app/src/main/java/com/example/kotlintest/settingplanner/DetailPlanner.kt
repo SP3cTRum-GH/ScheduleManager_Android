@@ -5,18 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlintest.R
 import com.example.kotlintest.databinding.FragmentDetailPlannerBinding
 import com.example.kotlintest.db.*
+import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
-import com.github.mikephil.charting.charts.PieChart
 
-class DetailPlanner(val plannerinfo:PlannerName_DTO) : Fragment() {
+class DetailPlanner(val plannerinfo:PlannerName_DTO, val plannerLivedata: PlannerLivedata) : Fragment() {
     private var _binding: FragmentDetailPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedAdapter: SharedAdapter
@@ -31,18 +29,22 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO) : Fragment() {
         binding.dpPlannerChart.centerText = plannerinfo.name
         binding.dpPlannerChart.setCenterTextSize(20f)
 
+        plannerLivedata.getAllPlan(plannerinfo.index)
         // 데이터 가져오기
-        sharedAdapter = SharedAdapter(requireContext(), plannerinfo.index, binding.dpPlannerChart, parentFragmentManager)
-        binding.detailPlanList.adapter = sharedAdapter.getListAdapter()
+        sharedAdapter = SharedAdapter(requireContext(), binding.dpPlannerChart, parentFragmentManager, plannerLivedata)
+        binding.detailPlanList.adapter = sharedAdapter.listAdapter
         binding.detailPlanList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        plannerLivedata.repo._homelist.observe(viewLifecycleOwner, Observer {
+            sharedAdapter.setDatalist(it)
+        })
 
         val l = ItemTouchHelper(SwipeHendler(sharedAdapter))
         l.attachToRecyclerView(binding.detailPlanList)
 
-        //일정추가
+//      일정추가
         binding.dpAddPlanBtn.setOnClickListener{
-            val fu: (Home_DTO) -> Unit = {data -> sharedAdapter.addData(data)}
-            val addSchedule = AddPlan(fu, plannerinfo.index)
+            val addSchedule = AddPlan(plannerinfo.index,plannerLivedata)
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
 //            transaction.add(EditPlannerFragment(), EditPlannerFragment().tag).commit()
             addSchedule.show(transaction,addSchedule.tag)

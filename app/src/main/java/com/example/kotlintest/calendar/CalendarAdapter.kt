@@ -8,15 +8,9 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlintest.R
 import com.example.kotlintest.databinding.TodolistItemBinding
-import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.util.CalLivedata
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.example.kotlintest.livedata.CalLivedata
 
 class CalendarAdapter: RecyclerView.Adapter<CalendarAdapter.CalenderViewHolder>{
     private var _binding: TodolistItemBinding? = null

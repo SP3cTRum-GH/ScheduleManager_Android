@@ -1,10 +1,8 @@
-package com.example.kotlintest
+package com.example.kotlintest.livedata
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kotlintest.util.CalLivedata
-import com.example.kotlintest.util.PlannerLivedata
 
 class LiveDataFactory(private val context: Context): ViewModelProvider.Factory{
     //필수

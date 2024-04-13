@@ -8,21 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.databinding.FragmentCalendarBinding
-import com.example.kotlintest.db.Calendar_DAO
-import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.util.CalLivedata
-import com.example.kotlintest.util.PlannerLivedata
+import com.example.kotlintest.livedata.CalLivedata
 import com.example.kotlintest.util.SwipeHendler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import java.util.Calendar
 import androidx.lifecycle.Observer
-import kotlin.collections.ArrayList
 
 class Calendar(val calLivedata: CalLivedata) : Fragment(), SwipeHendler.OnItemMoveListener {
     private var _binding: FragmentCalendarBinding? = null

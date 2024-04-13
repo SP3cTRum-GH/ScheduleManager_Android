@@ -78,7 +78,6 @@ class HomeDataStructure(var homelist: ArrayList<Home_DTO>,
     fun setPieItems() {
         sorter(homelist)
         blankdatalist = ArrayList(homelist)
-        homeCalTodoList = ArrayList()
         pieList = ArrayList()
         addBlank()
     }

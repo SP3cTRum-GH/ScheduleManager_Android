@@ -3,96 +3,78 @@ package com.example.kotlintest.settingplanner
 import android.content.Context
 import android.graphics.Color
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Home_DTO
+import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.formatter.PercentFormatter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 
-class SharedAdapter :SwipeHendler.OnItemMoveListener {
-//    private lateinit var dragStart
-    private var db: AppDatabase
-    private var mContext: Context
-    private var listAdapter: SettingPlannerAdapter
-    private var idx: Long
-    private var piechart: PieChart
-    private var fm: FragmentManager
-    private lateinit var data: PlannerDataStructure
-
-    constructor(context: Context, idx: Long, piechart: PieChart, fm: FragmentManager) {
-        this.mContext = context
-        this.db = AppDatabase.getDatabase(mContext)
-        this.idx = idx
+class SharedAdapter(context: Context,
+                    val listAdapter: SettingPlannerAdapter,
+                    piechart: PieChart, plannerLivedata: PlannerLivedata
+): SwipeHendler.OnItemMoveListener {
+    var mContext: Context
+    var piechart: PieChart
+    var data: PlannerDataStructure
+    var plannerLivedata: PlannerLivedata
+    init {
+        mContext = context
         this.piechart = piechart
-        this.fm = fm
-
-        this.listAdapter = SettingPlannerAdapter(fm)
-        loadDataFromDb()
+        data = PlannerDataStructure()
+        this.plannerLivedata = plannerLivedata
     }
-
-    private fun loadDataFromDb() {
-        CoroutineScope(Dispatchers.Main).launch {
-            var tmp: ArrayList<Home_DTO> = ArrayList()
-            val ret = CoroutineScope(Dispatchers.IO).async {
-                tmp.addAll(db.homeDao().getAllPlanner(idx))
+    constructor(context: Context, piechart: PieChart, fm: FragmentManager,plannerLivedata: PlannerLivedata):
+            this(context, SettingPlannerAdapter(fm,plannerLivedata), piechart, plannerLivedata) {
+                this.plannerLivedata = plannerLivedata
             }
-            ret.await()
-            data = PlannerDataStructure(tmp)
-            setAdapter()
-        }
-    }
-    fun addData(adddata:Home_DTO){
-        data.addData(adddata)
+
+    fun setDatalist(home: ArrayList<Home_DTO>) {
+        data.datalist = home
+        updatePieChart()
         setAdapter()
     }
 
-    fun getListAdapter() : SettingPlannerAdapter {
-        return listAdapter
-    }
+//    fun addData(adddata:Home_DTO){
+//        data.addData(adddata)
+//        setAdapter()
+//    }
 
     private fun setAdapter() {
-        val listitem = data.getDatalist()
-        listAdapter.items = listitem
-        val dataSet = PieDataSet(data.getPieList(), "")
-        val data = PieData(dataSet)
-        data.setValueTextSize(0f)
-        if(listitem.isNotEmpty()) {
-            val min = listitem[0].starttime
-//            val min = start[0].toInt() * 60 + start[1].toInt()
-
-            piechart.rotationAngle = -90f + (min * 0.25f)
-        }
-        piechart.data = data
-        piechart.legend.isEnabled = false
-
-        piechart.setEntryLabelColor(Color.BLACK)
-
+        listAdapter.items = data.datalist
+        updatePieChart()
         allNotify()
     }
 
-    private fun allNotify() {
-        listAdapter.notifyDataSetChanged()
-        piechart.invalidate()
+        private fun allNotify() {
+            listAdapter.notifyDataSetChanged()
+            piechart.invalidate()
+        }
+
+        private fun updatePieChart() {
+            data.setPieItems()
+            val dataSet = PieDataSet(data.pieList, "")
+            val pieData = PieData(dataSet)
+            pieData.setValueTextSize(0f)
+
+            if(data.datalist.isNotEmpty()) {
+                val min = data.datalist[0].starttime
+
+                piechart.rotationAngle = -90f + (min * 0.25f)
+            }
+            piechart.data = pieData
+            piechart.legend.isEnabled = false
+
+            piechart.setEntryLabelColor(Color.BLACK)
+            piechart.invalidate()
+
     }
 
     override fun swiped(position: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-            var d = data.getDatalist()[position]
-            data.deleteData(position)
-
-            CoroutineScope(Dispatchers.IO).async {
-                db.homeDao().deletePlanner(d)
-                db.todoDao().deleteAllTodo(d.index)
-            }
-            setAdapter()
-        }
+        var d = data.datalist[position]
+        plannerLivedata.removePlan(d)
+        setAdapter()
     }
+
 }

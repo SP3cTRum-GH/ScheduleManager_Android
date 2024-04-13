@@ -11,7 +11,7 @@ interface Home_DAO {
     fun getAllPlanner(): List<Home_DTO>
 
     @Insert
-    fun insertPlanner(task: Home_DTO)
+    fun insertPlan(task: Home_DTO)
 
 //    @Query("DELETE FROM home WHERE index = :index")
     @Delete

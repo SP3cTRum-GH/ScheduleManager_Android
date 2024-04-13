@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.databinding.StringlistBinding
-import com.example.kotlintest.databinding.TodolistItemBinding
 import com.example.kotlintest.db.PlannerName_DTO
+import com.example.kotlintest.livedata.PlannerLivedata
 
 class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder> {
     private var _binding: StringlistBinding? = null
@@ -18,9 +18,11 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
     lateinit var mContext: Context
     var items: ArrayList<PlannerName_DTO>
     var fm: FragmentManager
-    constructor(fm: FragmentManager) {
+    var plannerLivedata: PlannerLivedata
+    constructor(fm: FragmentManager,plannerLivedata: PlannerLivedata) {
         this.items = ArrayList()
         this.fm = fm
+        this.plannerLivedata = plannerLivedata
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlannerAdapter.PlannerNameViewHolder {
         _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -35,7 +37,7 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
 
         holder.plannerName.setOnClickListener {
             val selectedItem = items[position]
-            val fragment = DetailPlanner(selectedItem)
+            val fragment = DetailPlanner(selectedItem,plannerLivedata)
 
             fm.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
         }

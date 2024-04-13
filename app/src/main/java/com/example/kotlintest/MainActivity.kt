@@ -8,8 +8,9 @@ import com.example.kotlintest.calendar.Calendar
 import com.example.kotlintest.settingplanner.SettingPlanner
 import com.example.kotlintest.home.Home
 import com.example.kotlintest.setting.Setting
-import com.example.kotlintest.util.CalLivedata
-import com.example.kotlintest.util.PlannerLivedata
+import com.example.kotlintest.livedata.CalLivedata
+import com.example.kotlintest.livedata.LiveDataFactory
+import com.example.kotlintest.livedata.PlannerLivedata
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.LocalDate
 

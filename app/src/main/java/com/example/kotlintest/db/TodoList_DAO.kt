@@ -8,7 +8,7 @@ interface TodoList_DAO {
     fun getAllTodo(index:Long): List<TodoList_DTO>
 
     @Insert
-    fun insertPlanner(task: TodoList_DTO)
+    fun insertTodo(task: TodoList_DTO)
 
     @Update
     fun update(done: TodoList_DTO)

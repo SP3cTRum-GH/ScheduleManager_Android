@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import com.example.kotlintest.databinding.FragmentHomeBinding
-import com.example.kotlintest.util.CalLivedata
-import com.example.kotlintest.util.PlannerLivedata
+import com.example.kotlintest.livedata.CalLivedata
+import com.example.kotlintest.livedata.PlannerLivedata
 
 class Home(val plannerLivedata: PlannerLivedata, val calLivedata: CalLivedata) : Fragment() {
     private var _binding: FragmentHomeBinding? = null
