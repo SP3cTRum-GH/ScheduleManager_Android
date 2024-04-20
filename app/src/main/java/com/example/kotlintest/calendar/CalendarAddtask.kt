@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import com.example.kotlintest.databinding.FragmentCalendarAddtaskBinding
 import com.example.kotlintest.util.TimePicker
 import com.example.kotlintest.db.Calendar_DTO
-import com.example.kotlintest.livedata.CalLivedata
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class CalendarAddtask(val calLivedata: CalLivedata) : BottomSheetDialogFragment() {
+class CalendarAddtask(val viewModel: CalendarVM) : BottomSheetDialogFragment() {
     private var _binding: FragmentCalendarAddtaskBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -56,7 +55,7 @@ class CalendarAddtask(val calLivedata: CalLivedata) : BottomSheetDialogFragment(
                 task = Calendar_DTO(date = selectedDateStr, task = binding.calTaskET.text.toString(), endtime = tp.getEndTime(), starttime = tp.getStartTime()
                 )
             }
-            calLivedata.insertTaskForDate(task)
+            viewModel.insertTaskForDate(task)
             dismiss()
         }
         return binding.root

@@ -8,7 +8,6 @@ import com.example.kotlintest.calendar.Calendar
 import com.example.kotlintest.settingplanner.SettingPlanner
 import com.example.kotlintest.home.Home
 import com.example.kotlintest.setting.Setting
-import com.example.kotlintest.livedata.CalLivedata
 import com.example.kotlintest.livedata.LiveDataFactory
 import com.example.kotlintest.livedata.PlannerLivedata
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,7 +15,6 @@ import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
     private lateinit var _plannerLivedata: PlannerLivedata
-    private lateinit var _calLivedata: CalLivedata
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var frag: Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,19 +22,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         _plannerLivedata = ViewModelProvider(this, LiveDataFactory(applicationContext)).get(PlannerLivedata::class.java)
-        _calLivedata = ViewModelProvider(this, LiveDataFactory(applicationContext)).get(CalLivedata::class.java)
 
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavi)
-        supportFragmentManager.beginTransaction().add(R.id.frameLayout, Home(_plannerLivedata,_calLivedata)).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frameLayout, Home(_plannerLivedata)).commit()
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
-                    _calLivedata.getAllTaskForDate(LocalDate.now().toString())
-                    frag = Home(_plannerLivedata,_calLivedata)
+//                    _calLivedata.getAllTaskForDate(LocalDate.now().toString())
+                    frag = Home(_plannerLivedata)
                 }
                 R.id.calinder -> {
-                    frag = Calendar(_calLivedata)
+                    frag = Calendar()
                 }
                 R.id.detailPlannerName -> {
                     frag = SettingPlanner(_plannerLivedata)

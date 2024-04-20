@@ -8,10 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import com.example.kotlintest.databinding.FragmentHomeBinding
-import com.example.kotlintest.livedata.CalLivedata
 import com.example.kotlintest.livedata.PlannerLivedata
 
-class Home(val plannerLivedata: PlannerLivedata, val calLivedata: CalLivedata) : Fragment() {
+class Home(val plannerLivedata: PlannerLivedata) : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -35,9 +34,9 @@ class Home(val plannerLivedata: PlannerLivedata, val calLivedata: CalLivedata) :
         plannerLivedata.repo._todolist.observe(viewLifecycleOwner, Observer {
             adapter.setTodolist(it)
         })
-        calLivedata.repo._callist.observe(viewLifecycleOwner, Observer {
-            adapter.setCallist(it)
-        })
+//        calLivedata.repo._callist.observe(viewLifecycleOwner, Observer {
+//            adapter.setCallist(it)
+//        })
 
         //시간표 변경
         binding.selectPlannerFAB.setOnClickListener{

@@ -1,5 +1,6 @@
 package com.example.kotlintest.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao

@@ -10,9 +10,6 @@ class LiveDataFactory(private val context: Context): ViewModelProvider.Factory{
         return if(modelClass.isAssignableFrom(PlannerLivedata::class.java)) {
             PlannerLivedata(context) as T
         }
-        else if(modelClass.isAssignableFrom(CalLivedata::class.java)) {
-            CalLivedata(context) as T
-        }
         else {
             throw IllegalArgumentException("Unknown viewModel Class")
         }

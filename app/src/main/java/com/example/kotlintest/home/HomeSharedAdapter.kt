@@ -60,6 +60,7 @@ class HomeSharedAdapter(context: Context,
 
             piechart.rotationAngle = -90f + (min * 0.25f)
         }
+        piechart.isRotationEnabled = false
         piechart.data = pieData
         piechart.legend.isEnabled = false
 

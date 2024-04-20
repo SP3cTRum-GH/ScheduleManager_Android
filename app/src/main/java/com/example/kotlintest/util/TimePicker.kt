@@ -11,7 +11,7 @@ import com.example.kotlintest.databinding.FragmentTimePickerBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
+//getter setter 형식바꾸기
 class TimePicker() : BottomSheetDialogFragment() {
     private var _binding: FragmentTimePickerBinding? = null
     private val binding get() = _binding!!
