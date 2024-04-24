@@ -22,7 +22,7 @@ class HomeAdapter(val context: Context, var items: ArrayList<PlannerName_DTO>) :
     fun clear() {
         items.clear()
     }
-    fun addAll(data: MutableList<PlannerName_DTO>) {
+    fun addAll(data: List<PlannerName_DTO>) {
         this.items = ArrayList(data)
         this.notifyDataSetChanged()
     }

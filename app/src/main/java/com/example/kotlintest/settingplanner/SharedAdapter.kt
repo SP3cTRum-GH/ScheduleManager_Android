@@ -3,8 +3,8 @@ package com.example.kotlintest.settingplanner
 import android.content.Context
 import android.graphics.Color
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModel
 import com.example.kotlintest.db.Home_DTO
-import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -13,24 +13,24 @@ import com.github.mikephil.charting.data.PieDataSet
 
 class SharedAdapter(context: Context,
                     val listAdapter: SettingPlannerAdapter,
-                    piechart: PieChart, plannerLivedata: PlannerLivedata
+                    piechart: PieChart, viewModel: PlannerVM
 ): SwipeHendler.OnItemMoveListener {
     var mContext: Context
     var piechart: PieChart
     var data: PlannerDataStructure
-    var plannerLivedata: PlannerLivedata
+    var viewModel: PlannerVM
     init {
         mContext = context
         this.piechart = piechart
         data = PlannerDataStructure()
-        this.plannerLivedata = plannerLivedata
+        this.viewModel = viewModel
     }
-    constructor(context: Context, piechart: PieChart, fm: FragmentManager,plannerLivedata: PlannerLivedata):
-            this(context, SettingPlannerAdapter(fm,plannerLivedata), piechart, plannerLivedata) {
-                this.plannerLivedata = plannerLivedata
+    constructor(context: Context, piechart: PieChart, fm: FragmentManager,viewModel: PlannerVM):
+            this(context, SettingPlannerAdapter(fm,viewModel), piechart, viewModel) {
+                this.viewModel = viewModel
             }
 
-    fun setDatalist(home: ArrayList<Home_DTO>) {
+    fun setDatalist(home: List<Home_DTO>) {
         data.datalist = home
         updatePieChart()
         setAdapter()
@@ -75,7 +75,7 @@ class SharedAdapter(context: Context,
 
     override fun swiped(position: Int) {
         var d = data.datalist[position]
-        plannerLivedata.removePlan(d)
+        viewModel.removePlan(d)
         setAdapter()
     }
 

@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.livedata.Calrepo
-import com.example.kotlintest.livedata.PlannerLivedata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

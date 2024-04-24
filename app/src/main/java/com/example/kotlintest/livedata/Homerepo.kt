@@ -3,8 +3,10 @@ package com.example.kotlintest.livedata
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.kotlintest.db.AppDatabase
+import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.Home_DTO
 import com.example.kotlintest.db.TodoList_DTO
+import com.example.kotlintest.home.Home
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,7 +30,10 @@ class Homerepo {
 
     }
 
-    fun getAllPlan(idx: Long): List<Home_DTO> {
+    fun getAllPlan(idx: Long): LiveData<List<Home_DTO>> {
         return _db.homeDao().getAllPlanner(idx)
+    }
+    fun currentTime(planner: Long,time: Int) : LiveData<Long> {
+        return _db.homeDao().currentTimeIndex(planner,time)
     }
 }

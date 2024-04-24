@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.databinding.StringlistBinding
 import com.example.kotlintest.db.PlannerName_DTO
-import com.example.kotlintest.livedata.PlannerLivedata
 
 class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder> {
     private var _binding: StringlistBinding? = null
@@ -18,11 +19,11 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
     lateinit var mContext: Context
     var items: ArrayList<PlannerName_DTO>
     var fm: FragmentManager
-    var plannerLivedata: PlannerLivedata
-    constructor(fm: FragmentManager,plannerLivedata: PlannerLivedata) {
+    var viewModel: PlannerVM
+    constructor(fm: FragmentManager,viewModel: PlannerVM) {
         this.items = ArrayList()
         this.fm = fm
-        this.plannerLivedata = plannerLivedata
+        this.viewModel = viewModel
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlannerAdapter.PlannerNameViewHolder {
         _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -33,11 +34,11 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
     override fun onBindViewHolder(holder: PlannerAdapter.PlannerNameViewHolder, position: Int) {
         var currentItem = items[position]
 
-        holder.plannerName.text = currentItem.name
+        holder.bind(currentItem.name)
 
-        holder.plannerName.setOnClickListener {
+        holder.textArea.setOnClickListener {
             val selectedItem = items[position]
-            val fragment = DetailPlanner(selectedItem,plannerLivedata)
+            val fragment = DetailPlanner(selectedItem,viewModel)
 
             fm.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
         }
@@ -55,12 +56,15 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
         items.clear()
     }
 
-    fun addAll(data: MutableList<PlannerName_DTO>) {
+    fun addAll(data: List<PlannerName_DTO>) {
         this.items = ArrayList(data)
         this.notifyDataSetChanged()
     }
 
     inner class PlannerNameViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val plannerName: TextView = binding.plannerNameText
+        fun bind(plannerName: String) {
+            binding.item = plannerName
+        }
+        val textArea: ConstraintLayout = binding.textArea
     }
 }

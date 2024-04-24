@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
 import com.example.kotlintest.databinding.FragmentAddPlanBinding
 import com.example.kotlintest.db.*
-import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.TimePicker
 
-class AddPlan(val idx:Long,val plannerLivedata: PlannerLivedata) : DialogFragment() {
+class AddPlan(val idx:Long,val viewModel: PlannerVM) : DialogFragment() {
     private var _binding: FragmentAddPlanBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -36,7 +36,7 @@ class AddPlan(val idx:Long,val plannerLivedata: PlannerLivedata) : DialogFragmen
 
         binding.planSaveBtn.setOnClickListener{
             val data = Home_DTO(starttime = tp.getStartTime(), endtime = tp.getEndTime(), task = binding.planET.text.toString(), name = idx)
-            plannerLivedata.insertPlan(data)
+            viewModel.insertPlan(data)
             dismiss()
         }
         return binding.root

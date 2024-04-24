@@ -34,17 +34,17 @@ class HomeSharedAdapter(context: Context,
     constructor(context: Context, piechart: PieChart)
             : this(context, HomeCalListAdapter(context), HomeTodoAdapter(context), piechart)
 
-    fun setHomelist(home: ArrayList<Home_DTO>) {
+    fun setHomelist(home: List<Home_DTO>) {
         data.homelist = home
         updatePieChart()
     }
 
-    fun setCallist(cal: ArrayList<Calendar_DTO>) {
+    fun setCallist(cal: List<Calendar_DTO>) {
         data.callist = cal
         setAdapter()
     }
 
-    fun setTodolist(todo: ArrayList<TodoList_DTO>) {
+    fun setTodolist(todo: List<TodoList_DTO>) {
         data.todolist = todo
         setAdapter()
     }

@@ -38,7 +38,7 @@ class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoListViewHolder> {
         items.clear()
     }
 
-    fun addAll(data: MutableList<TodoList_DTO>) {
+    fun addAll(data: List<TodoList_DTO>) {
         this.items = ArrayList(data)
         this.notifyDataSetChanged()
     }
@@ -59,7 +59,7 @@ class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoListViewHolder> {
 override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
     var currentItem = items[position]
 
-    holder.todo.text = currentItem.todo
+    holder.bind(currentItem.todo)
 }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
@@ -69,7 +69,9 @@ override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
     }
 
     inner class TodoListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val todo: TextView = binding.plannerNameText
+        fun bind(todotask: String) {
+            binding.item = todotask
+        }
     }
 
 }

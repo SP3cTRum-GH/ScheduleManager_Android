@@ -7,41 +7,44 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kotlintest.calendar.CalendarVM
 import com.example.kotlintest.databinding.FragmentSettingPlannerBinding
-import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingPlanner(val plannerLivedata: PlannerLivedata) : Fragment(), SwipeHendler.OnItemMoveListener {
+class SettingPlanner : Fragment(), SwipeHendler.OnItemMoveListener {
     private var _binding: FragmentSettingPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PlannerAdapter
+    private lateinit var viewModel: PlannerVM
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSettingPlannerBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this,PlannerVM.Factory(requireActivity().application)).get(PlannerVM::class.java)
 
-        adapter = PlannerAdapter(parentFragmentManager,plannerLivedata)
+        adapter = PlannerAdapter(parentFragmentManager,viewModel)
         binding.plannerNameList.adapter = adapter
 
         binding.plannerNameList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        plannerLivedata.repo._plannerNamelist.observe(viewLifecycleOwner, Observer {
+
+        viewModel.getAllPlanner().observe(viewLifecycleOwner, Observer {
             adapter.clear()
             adapter.addAll(it)
         })
-        plannerLivedata.getAllPlanner()
 
         val l = ItemTouchHelper(SwipeHendler(this))
         l.attachToRecyclerView(binding.plannerNameList)
 
         binding.addPlannerBtn.setOnClickListener{
-            val addPlanner = AddPlanner(plannerLivedata)
+            val addPlanner = AddPlanner(viewModel)
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
             transaction.addToBackStack(null)
             addPlanner.show(transaction,addPlanner.tag)
@@ -65,7 +68,7 @@ class SettingPlanner(val plannerLivedata: PlannerLivedata) : Fragment(), SwipeHe
     override fun swiped(position: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             var d = adapter.items[position]
-            plannerLivedata.removePlanner(d)
+            viewModel.removePlanner(d)
         }
     }
 }

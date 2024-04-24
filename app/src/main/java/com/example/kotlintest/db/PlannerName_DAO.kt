@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface PlannerName_DAO {
     @Query("SELECT * FROM planner")
-    fun getAllPlanner(): List<PlannerName_DTO>
+    fun getAllPlanner(): LiveData<List<PlannerName_DTO>>
 
     @Insert
     fun insertPlanner(task: PlannerName_DTO)

@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
 import com.example.kotlintest.databinding.FragmentAddPlannerBinding
 import com.example.kotlintest.db.PlannerName_DTO
-import com.example.kotlintest.livedata.PlannerLivedata
 
-class AddPlanner(val plannerLivedata: PlannerLivedata) : DialogFragment() {
+class AddPlanner(val viewModel: PlannerVM) : DialogFragment() {
     private var _binding: FragmentAddPlannerBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -25,7 +25,7 @@ class AddPlanner(val plannerLivedata: PlannerLivedata) : DialogFragment() {
 
         binding.apSubmitBtn.setOnClickListener{
             val plannerName = PlannerName_DTO(name = binding.plannerNameET.text.toString())
-            plannerLivedata.insertPlanner(plannerName)
+            viewModel.insertPlanner(plannerName)
             dismiss()
         }
 

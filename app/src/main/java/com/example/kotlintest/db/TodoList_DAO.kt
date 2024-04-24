@@ -6,7 +6,7 @@ import androidx.room.*
 @Dao
 interface TodoList_DAO {
     @Query("SELECT * FROM todo WHERE plannerIndex = :index")
-    fun getAllTodo(index:Long): List<TodoList_DTO>
+    fun getAllTodo(index:Long): LiveData<List<TodoList_DTO>>
 
     @Insert
     fun insertTodo(task: TodoList_DTO)

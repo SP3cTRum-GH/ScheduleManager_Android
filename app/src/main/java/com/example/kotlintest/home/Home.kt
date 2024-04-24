@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.kotlintest.calendar.CalendarVM
 import com.example.kotlintest.databinding.FragmentHomeBinding
-import com.example.kotlintest.livedata.PlannerLivedata
 
-class Home(val plannerLivedata: PlannerLivedata) : Fragment() {
+class Home: Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var viewModel: HomeVM
     private lateinit var adapter: HomeSharedAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,25 +23,28 @@ class Home(val plannerLivedata: PlannerLivedata) : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 //        var view = inflater.inflate(R.layout.fragment_home, container, false)
-
+        viewModel = ViewModelProvider(this,HomeVM.Factory(requireActivity().application)).get(HomeVM::class.java)
         adapter = HomeSharedAdapter(requireContext(), binding.homePlannerChart)
         binding.homeCalTodoList.adapter = adapter.listAdapter
         binding.homeCurrentTodoList.adapter = adapter.todoAdapter
 
         //옵저빙
-        plannerLivedata.repo._homelist.observe(viewLifecycleOwner, Observer {
+        viewModel.getAllPlan().observe(viewLifecycleOwner, Observer {
             adapter.setHomelist(it)
         })
-        plannerLivedata.repo._todolist.observe(viewLifecycleOwner, Observer {
-            adapter.setTodolist(it)
+        if(viewModel.todoindex.value != null) {
+            viewModel.getCurrentTodo().observe(viewLifecycleOwner, Observer {
+                adapter.setTodolist(it)
+            })
+        }
+        viewModel.setCalQuery()
+        viewModel.getCurrentTaskForDate().observe(viewLifecycleOwner, Observer {
+            adapter.setCallist(it)
         })
-//        calLivedata.repo._callist.observe(viewLifecycleOwner, Observer {
-//            adapter.setCallist(it)
-//        })
 
         //시간표 변경
         binding.selectPlannerFAB.setOnClickListener{
-            val changeplanner = SelectPlannerFragment(plannerLivedata)
+            val changeplanner = SelectPlannerFragment(viewModel)
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
             transaction.addToBackStack(null)
 

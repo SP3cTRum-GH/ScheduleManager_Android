@@ -16,7 +16,7 @@ class PNrepo {
         this._db = AppDatabase.getDatabase(context)
     }
 
-    fun getAllPlanner(): List<PlannerName_DTO>{
+    fun getAllPlanner(): LiveData<List<PlannerName_DTO>>{
         return _db.plannerDao().getAllPlanner()
     }
 

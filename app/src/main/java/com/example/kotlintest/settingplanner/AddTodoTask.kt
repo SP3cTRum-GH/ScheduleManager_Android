@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
 import com.example.kotlintest.R
 import com.example.kotlintest.db.Home_DTO
 import com.example.kotlintest.db.TodoList_DTO
-import com.example.kotlintest.livedata.PlannerLivedata
 
-class AddTodoTask(val plannerinfo: Home_DTO, val plannerLivedata: PlannerLivedata) : DialogFragment() {
+class AddTodoTask(val plannerinfo: Home_DTO, val viewModel: PlannerVM) : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,7 +28,7 @@ class AddTodoTask(val plannerinfo: Home_DTO, val plannerLivedata: PlannerLivedat
 
         ok.setOnClickListener{
             val task = TodoList_DTO(todo = todoTask.text.toString(), done = false, plannerIndex = plannerinfo.index)
-            plannerLivedata.insertTodo(task)
+            viewModel.insertTodo(task)
             dismiss()
         }
 

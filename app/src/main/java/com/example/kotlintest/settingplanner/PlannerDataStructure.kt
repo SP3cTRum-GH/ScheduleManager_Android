@@ -5,8 +5,10 @@ import com.example.kotlintest.db.Home_DTO
 import com.example.kotlintest.db.TodoList_DTO
 import com.example.kotlintest.home.Home
 import com.github.mikephil.charting.data.PieEntry
+import java.util.*
+import kotlin.collections.ArrayList
 
-class PlannerDataStructure(var datalist: ArrayList<Home_DTO>){
+class PlannerDataStructure(var datalist: List<Home_DTO>){
     var blankdatalist: ArrayList<Home_DTO>
     var pieList: ArrayList<PieEntry>//1min angle 0.25
 
@@ -59,8 +61,8 @@ class PlannerDataStructure(var datalist: ArrayList<Home_DTO>){
         
     }
 
-    private fun sorter(sortinglist:ArrayList<Home_DTO>) {
-        sortinglist.sortBy { it.starttime }
+    private fun sorter(sortinglist:List<Home_DTO>) {
+        Collections.sort(sortinglist, { o1, o2 -> o1.starttime - o2.starttime })
     }
 
     fun setPieItems() {

@@ -4,26 +4,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlintest.R
 import com.example.kotlintest.databinding.SettingplannerListviewBinding
 import com.example.kotlintest.db.Home_DTO
-import com.example.kotlintest.livedata.PlannerLivedata
 
 
 class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.SettingPlannerViewHolder> {
     private var _binding: SettingplannerListviewBinding? = null
     private val binding get() = _binding!!
-    var items: ArrayList<Home_DTO>
+    var items: List<Home_DTO>
     var fm: FragmentManager
-    var plannerLivedata: PlannerLivedata
+    var viewModel: PlannerVM
 //    lateinit var mContext: Context
 
-    constructor(fm: FragmentManager, plannerLiveData: PlannerLivedata) {
+    constructor(fm: FragmentManager, viewModel: PlannerVM) {
         this.items = ArrayList()
         this.fm = fm
-        this.plannerLivedata = plannerLiveData
+        this.viewModel = viewModel
     }
 
 //    override fun getCount(): Int {
@@ -42,11 +42,7 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
         return items.count()
     }
 
-    fun clear() {
-        items.clear()
-    }
-
-    fun addAll(data: MutableList<Home_DTO>) {
+    fun addAll(data: List<Home_DTO>) {
         this.items = ArrayList(data)
         this.notifyDataSetChanged()
     }
@@ -80,13 +76,15 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     override fun onBindViewHolder(holder: SettingPlannerViewHolder, position: Int) {
         var currentItem = items[position]
 
-        holder.startTime.text = String.format("%02d", currentItem.starttime / 60) + " : " + String.format("%02d", currentItem.starttime % 60)
-        holder.endTime.text = String.format("%02d", currentItem.endtime / 60) + " : " + String.format("%02d", currentItem.endtime % 60)
-        holder.task.text = currentItem.task
+        val startTime = String.format("%02d", currentItem.starttime / 60) + " : " + String.format("%02d", currentItem.starttime % 60)
+        val endTime = String.format("%02d", currentItem.endtime / 60) + " : " + String.format("%02d", currentItem.endtime % 60)
+        val task = currentItem.task
 
-        holder.task.setOnClickListener {
+        holder.bind(startTime,endTime,task)
+
+        holder.listArea.setOnClickListener {
             val selectedItem = items[position]
-            val fragment = SettingTodoList(selectedItem,plannerLivedata)
+            val fragment = SettingTodoList(selectedItem,viewModel)
 
             fm.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit()
         }
@@ -99,8 +97,11 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     }
 
     inner class SettingPlannerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val startTime: TextView = binding.splStartTime
-        val endTime: TextView = binding.splEndTime
-        val task: TextView = binding.splTask
+        fun bind(starttime: String, endtime: String, task: String) {
+            binding.starttime = starttime
+            binding.endtime = endtime
+            binding.task = task
+        }
+        val listArea: ConstraintLayout = binding.listArea
     }
 }

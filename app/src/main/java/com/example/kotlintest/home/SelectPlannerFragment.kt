@@ -9,9 +9,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import com.example.kotlintest.databinding.FragmentSelectPlannerBinding
 import com.example.kotlintest.db.*
-import com.example.kotlintest.livedata.PlannerLivedata
 
-class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragment() {
+class SelectPlannerFragment(val viewModel: HomeVM) : DialogFragment() {
     private var _binding: FragmentSelectPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: HomeAdapter
@@ -25,7 +24,7 @@ class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragme
         _binding = FragmentSelectPlannerBinding.inflate(inflater, container, false)
         binding.spPlannerList.choiceMode = ListView.CHOICE_MODE_SINGLE
 
-        plannerLivedata.repo._plannerNamelist.observe(viewLifecycleOwner, Observer {
+        viewModel.getAllPlanner().observe(viewLifecycleOwner, Observer {
             adapter.clear()
             adapter.addAll(it)
         })
@@ -34,7 +33,6 @@ class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragme
         var items = ArrayList<PlannerName_DTO>()
         adapter = HomeAdapter(requireContext(), items)
         binding.spPlannerList.adapter = adapter
-        plannerLivedata.getAllPlanner()
 
         binding.spPlannerList.setOnItemClickListener { adapterView, view, i, l ->
             val position = adapterView.getItemAtPosition(i) as PlannerName_DTO
@@ -46,7 +44,7 @@ class SelectPlannerFragment(val plannerLivedata: PlannerLivedata) : DialogFragme
         }
 
         binding.spSubmitBtn.setOnClickListener{
-            plannerLivedata.getAllPlan(selectedItem)
+            viewModel.setPlanQuery(selectedItem)
             dismiss()
         }
 

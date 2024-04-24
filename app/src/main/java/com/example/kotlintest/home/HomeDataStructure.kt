@@ -6,10 +6,12 @@ import com.example.kotlintest.db.TodoList_DTO
 import com.github.mikephil.charting.data.PieEntry
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
-class HomeDataStructure(var homelist: ArrayList<Home_DTO>,
-                        var callist: ArrayList<Calendar_DTO>,
-                        var todolist: ArrayList<TodoList_DTO>,
+class HomeDataStructure(var homelist: List<Home_DTO>,
+                        var callist: List<Calendar_DTO>,
+                        var todolist: List<TodoList_DTO>,
                         ){
     var blankdatalist: ArrayList<Home_DTO>
     var homeCalTodoList: ArrayList<Calendar_DTO>
@@ -57,7 +59,7 @@ class HomeDataStructure(var homelist: ArrayList<Home_DTO>,
         }
     }
 
-    private fun caltodoCurrentTime(list:ArrayList<Calendar_DTO>,t:Int){
+    private fun caltodoCurrentTime(list:List<Calendar_DTO>,t:Int){
         for(i in list){
             var t1 = i.starttime
 //            val t1 = start[0].toInt() * 60 + start[1].toInt()
@@ -71,8 +73,8 @@ class HomeDataStructure(var homelist: ArrayList<Home_DTO>,
         }
     }
 
-    private fun sorter(sortinglist:ArrayList<Home_DTO>) {
-        sortinglist.sortBy { it.starttime }
+    private fun sorter(sortinglist:List<Home_DTO>) {
+        Collections.sort(sortinglist, { o1, o2 -> o1.starttime - o2.starttime })
     }
 
     fun setPieItems() {

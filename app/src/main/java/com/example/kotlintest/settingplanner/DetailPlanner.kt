@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.databinding.FragmentDetailPlannerBinding
 import com.example.kotlintest.db.*
-import com.example.kotlintest.livedata.PlannerLivedata
 import com.example.kotlintest.util.SwipeHendler
 
-class DetailPlanner(val plannerinfo:PlannerName_DTO, val plannerLivedata: PlannerLivedata) : Fragment() {
+class DetailPlanner(val plannerinfo:PlannerName_DTO, val viewModel: PlannerVM) : Fragment() {
     private var _binding: FragmentDetailPlannerBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedAdapter: SharedAdapter
@@ -29,13 +29,13 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO, val plannerLivedata: Planne
         binding.dpPlannerChart.centerText = plannerinfo.name
         binding.dpPlannerChart.setCenterTextSize(20f)
 
-        plannerLivedata.getAllPlan(plannerinfo.index)
         // 데이터 가져오기
-        sharedAdapter = SharedAdapter(requireContext(), binding.dpPlannerChart, parentFragmentManager, plannerLivedata)
+        sharedAdapter = SharedAdapter(requireContext(), binding.dpPlannerChart, parentFragmentManager, viewModel)
         binding.detailPlanList.adapter = sharedAdapter.listAdapter
         binding.detailPlanList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        plannerLivedata.repo._homelist.observe(viewLifecycleOwner, Observer {
+        viewModel.setPlanQuery(plannerinfo.index)
+        viewModel.getAllPlan().observe(viewLifecycleOwner, Observer {
             sharedAdapter.setDatalist(it)
         })
 
@@ -44,7 +44,7 @@ class DetailPlanner(val plannerinfo:PlannerName_DTO, val plannerLivedata: Planne
 
 //      일정추가
         binding.dpAddPlanBtn.setOnClickListener{
-            val addSchedule = AddPlan(plannerinfo.index,plannerLivedata)
+            val addSchedule = AddPlan(plannerinfo.index,viewModel)
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
 //            transaction.add(EditPlannerFragment(), EditPlannerFragment().tag).commit()
             addSchedule.show(transaction,addSchedule.tag)

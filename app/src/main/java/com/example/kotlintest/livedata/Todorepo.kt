@@ -19,7 +19,7 @@ class Todorepo {
         this._db = AppDatabase.getDatabase(context)
     }
 
-    fun getAllTodo(item: Long): List<TodoList_DTO>{
+    fun getAllTodo(item: Long): LiveData<List<TodoList_DTO>>{
         return _db.todoDao().getAllTodo(item)
     }
 

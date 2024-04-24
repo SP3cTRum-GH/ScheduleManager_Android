@@ -33,4 +33,8 @@ class Calrepo {
     fun getAllTaskForDate(date: String) : LiveData<List<Calendar_DTO>> {
         return _db.calDao().getAllTaskForDate(date)
     }
+
+    fun getCurrentTime(date: String,time: Int) : LiveData<List<Calendar_DTO>> {
+        return _db.calDao().getCurrentTime(date,time)
+    }
 }

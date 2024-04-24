@@ -16,7 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class HomeCalListAdapter : BaseAdapter {
-    var items: ArrayList<Calendar_DTO>
+    var items: List<Calendar_DTO>
     var mContext: Context
 
     constructor(context: Context) {
@@ -34,10 +34,6 @@ class HomeCalListAdapter : BaseAdapter {
 
     override fun getItemId(p0: Int): Long {
         return 0
-    }
-
-    fun clear() {
-        items.clear()
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {

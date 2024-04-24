@@ -16,7 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class HomeTodoAdapter : BaseAdapter {
-    var items: ArrayList<TodoList_DTO>
+    var items: List<TodoList_DTO>
     var mContext: Context
 
     constructor(context: Context) {
@@ -36,9 +36,6 @@ class HomeTodoAdapter : BaseAdapter {
         return 0
     }
 
-    fun clear() {
-        items.clear()
-    }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         var itemView = p1
