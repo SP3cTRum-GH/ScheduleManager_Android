@@ -8,6 +8,9 @@ interface TodoList_DAO {
     @Query("SELECT * FROM todo WHERE plannerIndex = :index")
     fun getAllTodo(index:Long): LiveData<List<TodoList_DTO>>
 
+    @Query("SELECT * FROM todo WHERE plannerIndex = :index")
+    fun getAllTodoList(index:Long): List<TodoList_DTO>
+
     @Insert
     fun insertTodo(task: TodoList_DTO)
 

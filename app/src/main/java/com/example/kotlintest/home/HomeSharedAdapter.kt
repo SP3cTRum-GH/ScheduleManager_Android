@@ -2,6 +2,7 @@ package com.example.kotlintest.home
 
 import android.content.Context
 import android.graphics.Color
+import androidx.lifecycle.ViewModel
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.Home_DTO
@@ -21,7 +22,6 @@ class HomeSharedAdapter(context: Context,
                         val listAdapter: HomeCalListAdapter,
                         val todoAdapter: HomeTodoAdapter,
                         piechart: PieChart){
-    var idx: Long = -1
     var mContext: Context
     var piechart: PieChart
     var data: HomeDataStructure
@@ -31,8 +31,8 @@ class HomeSharedAdapter(context: Context,
         this.piechart = piechart
         data = HomeDataStructure()
     }
-    constructor(context: Context, piechart: PieChart)
-            : this(context, HomeCalListAdapter(context), HomeTodoAdapter(context), piechart)
+    constructor(context: Context, piechart: PieChart, viewModel: HomeVM)
+            : this(context, HomeCalListAdapter(context,viewModel), HomeTodoAdapter(context,viewModel), piechart)
 
     fun setHomelist(home: List<Home_DTO>) {
         data.homelist = home

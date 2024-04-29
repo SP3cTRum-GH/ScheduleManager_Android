@@ -23,6 +23,13 @@ class Todorepo {
         return _db.todoDao().getAllTodo(item)
     }
 
+    fun getAllTodoList(item: Long): List<TodoList_DTO>{
+        return _db.todoDao().getAllTodoList(item)
+    }
+
+    fun updateTodo(item:TodoList_DTO){
+        _db.todoDao().update(item)
+    }
 
     fun insertTodo(item: TodoList_DTO){
         _db.todoDao().insertTodo(item)

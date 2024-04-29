@@ -27,7 +27,6 @@ class HomeVM(app: Application): AndroidViewModel(app){
     val todoindex: LiveData<Long>
     val calitem: LiveData<List<Calendar_DTO>>
     val planitem: LiveData<List<Home_DTO>>
-    val todoitem: LiveData<List<TodoList_DTO>>
     val calquery = MutableLiveData<String>()
     val planquery = MutableLiveData<Long>()
 
@@ -36,17 +35,15 @@ class HomeVM(app: Application): AndroidViewModel(app){
         val formatter = DateTimeFormatter.ofPattern("HH : mm")
         val formatted = current.format(formatter).toString().split(" : ")
         val t = formatted[0].toInt() * 60 + formatted[1].toInt()
+
         calitem = Transformations.switchMap(calquery) { query ->
             calrepo.getCurrentTime(query,t)
         }
         planitem = Transformations.switchMap(planquery) { query ->
             homerepo.getAllPlan(query)
         }
-        todoindex = Transformations.switchMap(planquery){query ->
+        todoindex = Transformations.switchMap(planquery){ query ->
             homerepo.currentTime(query,t)
-        }
-        todoitem = Transformations.switchMap(todoindex) { query ->
-            todorepo.getAllTodo(query)
         }
     }
 
@@ -74,8 +71,14 @@ class HomeVM(app: Application): AndroidViewModel(app){
         return planitem
     }
 
-    fun getCurrentTodo(): LiveData<List<TodoList_DTO>>{
-        return todoitem
+    fun getCurrentTodo(item: Long): List<TodoList_DTO>{
+        return todorepo.getAllTodoList(item)
+    }
+
+    fun updateTodo(item: TodoList_DTO){
+        CoroutineScope(Dispatchers.IO).launch {
+            todorepo.updateTodo(item)
+        }
     }
 
     fun setCalQuery(){

@@ -8,8 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlintest.calendar.CalendarVM
 import com.example.kotlintest.databinding.FragmentHomeBinding
+import com.example.kotlintest.db.TodoList_DTO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class Home: Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -24,19 +30,33 @@ class Home: Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 //        var view = inflater.inflate(R.layout.fragment_home, container, false)
         viewModel = ViewModelProvider(this,HomeVM.Factory(requireActivity().application)).get(HomeVM::class.java)
-        adapter = HomeSharedAdapter(requireContext(), binding.homePlannerChart)
+        adapter = HomeSharedAdapter(requireContext(), binding.homePlannerChart, viewModel)
         binding.homeCalTodoList.adapter = adapter.listAdapter
+        binding.homeCalTodoList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
         binding.homeCurrentTodoList.adapter = adapter.todoAdapter
+        binding.homeCurrentTodoList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         //옵저빙
         viewModel.getAllPlan().observe(viewLifecycleOwner, Observer {
             adapter.setHomelist(it)
         })
-        if(viewModel.todoindex.value != null) {
-            viewModel.getCurrentTodo().observe(viewLifecycleOwner, Observer {
-                adapter.setTodolist(it)
-            })
-        }
+
+        viewModel.todoindex.observe(viewLifecycleOwner, Observer{
+            var todoitem = ArrayList<TodoList_DTO>()
+            if(it != null) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val ret = CoroutineScope(Dispatchers.IO).async {
+                        todoitem.addAll(viewModel.getCurrentTodo(it))
+                    }
+                    ret.await()
+                    adapter.setTodolist(todoitem)
+                }
+            }
+            else
+                adapter.setTodolist(todoitem)
+        })
+
         viewModel.setCalQuery()
         viewModel.getCurrentTaskForDate().observe(viewLifecycleOwner, Observer {
             adapter.setCallist(it)
