@@ -1,5 +1,6 @@
 package com.example.kotlintest.settingplanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import androidx.fragment.app.FragmentManager
@@ -9,6 +10,7 @@ import com.example.kotlintest.util.SwipeHendler
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 
 
 class SharedAdapter(context: Context,
@@ -17,12 +19,10 @@ class SharedAdapter(context: Context,
 ): SwipeHendler.OnItemMoveListener {
     var mContext: Context
     var piechart: PieChart
-    var data: PlannerDataStructure
     var viewModel: PlannerVM
     init {
         mContext = context
         this.piechart = piechart
-        data = PlannerDataStructure()
         this.viewModel = viewModel
     }
     constructor(context: Context, piechart: PieChart, fm: FragmentManager,viewModel: PlannerVM):
@@ -31,9 +31,11 @@ class SharedAdapter(context: Context,
             }
 
     fun setDatalist(home: List<Home_DTO>) {
-        data.datalist = home
-        updatePieChart()
-        setAdapter()
+        viewModel.sorter(home)
+        listAdapter.addAll(home)
+        var piItem = viewModel.setPieItems(home)
+        updatePieChart(home, piItem)
+        listAdapter.notifyDataSetChanged()
     }
 
 //    fun addData(adddata:Home_DTO){
@@ -41,25 +43,13 @@ class SharedAdapter(context: Context,
 //        setAdapter()
 //    }
 
-    private fun setAdapter() {
-        listAdapter.items = data.datalist
-        updatePieChart()
-        allNotify()
-    }
-
-        private fun allNotify() {
-            listAdapter.notifyDataSetChanged()
-            piechart.invalidate()
-        }
-
-        private fun updatePieChart() {
-            data.setPieItems()
-            val dataSet = PieDataSet(data.pieList, "")
+        private fun updatePieChart(home: List<Home_DTO>, piItem:ArrayList<PieEntry>) {
+            val dataSet = PieDataSet(piItem, "")
             val pieData = PieData(dataSet)
             pieData.setValueTextSize(0f)
 
-            if(data.datalist.isNotEmpty()) {
-                val min = data.datalist[0].starttime
+            if(home.isNotEmpty()) {
+                val min = home[0].starttime
 
                 piechart.rotationAngle = -90f + (min * 0.25f)
             }
@@ -74,9 +64,8 @@ class SharedAdapter(context: Context,
     }
 
     override fun swiped(position: Int) {
-        var d = data.datalist[position]
+        val d = listAdapter.items[position]
         viewModel.removePlan(d)
-        setAdapter()
     }
 
 }

@@ -28,7 +28,7 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlannerAdapter.PlannerNameViewHolder {
         _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         mContext = binding.root.context
-        return PlannerNameViewHolder(binding.root)
+        return PlannerNameViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PlannerAdapter.PlannerNameViewHolder, position: Int) {
@@ -61,7 +61,7 @@ class PlannerAdapter : RecyclerView.Adapter<PlannerAdapter.PlannerNameViewHolder
         this.notifyDataSetChanged()
     }
 
-    inner class PlannerNameViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class PlannerNameViewHolder(val binding: StringlistBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(plannerName: String) {
             binding.item = plannerName
         }

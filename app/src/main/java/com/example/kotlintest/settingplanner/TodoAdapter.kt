@@ -65,10 +65,10 @@ override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         _binding = StringlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         mContext = binding.root.context
-        return TodoListViewHolder(binding.root)
+        return TodoListViewHolder(binding)
     }
 
-    inner class TodoListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class TodoListViewHolder(val binding: StringlistBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(todotask: String) {
             binding.item = todotask
         }

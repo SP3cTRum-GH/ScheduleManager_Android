@@ -1,13 +1,9 @@
-package com.example.kotlintest.livedata
+package com.example.kotlintest.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.kotlintest.db.AppDatabase
 import com.example.kotlintest.db.PlannerName_DTO
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class PNrepo {
     private var _db: AppDatabase

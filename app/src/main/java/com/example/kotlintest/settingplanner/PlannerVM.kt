@@ -2,18 +2,17 @@ package com.example.kotlintest.settingplanner
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.kotlintest.calendar.CalendarVM
-import com.example.kotlintest.db.Calendar_DTO
 import com.example.kotlintest.db.Home_DTO
 import com.example.kotlintest.db.PlannerName_DTO
 import com.example.kotlintest.db.TodoList_DTO
-import com.example.kotlintest.livedata.Calrepo
-import com.example.kotlintest.livedata.Homerepo
-import com.example.kotlintest.livedata.PNrepo
-import com.example.kotlintest.livedata.Todorepo
+import com.example.kotlintest.repository.Homerepo
+import com.example.kotlintest.repository.PNrepo
+import com.example.kotlintest.repository.Todorepo
+import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class PlannerVM(app:Application): AndroidViewModel(app) {
     private val pnrepo = PNrepo(app)
@@ -24,8 +23,12 @@ class PlannerVM(app:Application): AndroidViewModel(app) {
     val todoitem: LiveData<List<TodoList_DTO>>
     val planquery = MutableLiveData<Long>()
     val todoquery = MutableLiveData<Long>()
+    var blankdatalist: ArrayList<Home_DTO>
+    var pieList: ArrayList<PieEntry>//1min angle 0.25
 
     init {
+        blankdatalist = ArrayList()
+        pieList = ArrayList()
         pnitem = pnrepo.getAllPlanner()
         planitem = Transformations.switchMap(planquery) { query ->
             planrepo.getAllPlan(query)
@@ -91,5 +94,43 @@ class PlannerVM(app:Application): AndroidViewModel(app) {
     }
     fun setTodoQuery(idx: Long){
         todoquery.value = idx
+    }
+
+    fun sorter(sortinglist:List<Home_DTO>){
+        Collections.sort(sortinglist, { o1, o2 -> o1.starttime - o2.starttime })
+    }
+    private fun addBlank() {
+        for(i in 0 until blankdatalist.size - 1) {
+            makeBlank(i, i + 1)
+        }
+        sorter(blankdatalist)
+        if(blankdatalist.isNotEmpty()) {
+            makeBlank(blankdatalist.size - 1, 0)
+        }
+
+        for(i in blankdatalist){
+            var t1 = i.endtime
+            var t2 = i.starttime
+
+            if(t2 >= t1) t1 += 1440
+            val persent = (t1-t2)/1440f*100
+
+            pieList.add(PieEntry(persent, i.task))
+        }
+    }
+
+    private fun makeBlank(i1: Int, i2: Int) {
+        val t1 = blankdatalist[i1].endtime
+        val t2 = blankdatalist[i2].starttime
+
+        if(t1 - t2 != 0) {
+            blankdatalist.add(Home_DTO(starttime = blankdatalist[i1].endtime, endtime = blankdatalist[i2].starttime, task = "", name = -1))
+        }
+    }
+    fun setPieItems(item:List<Home_DTO>): ArrayList<PieEntry> {
+        blankdatalist = ArrayList(item)
+        pieList = ArrayList()
+        addBlank()
+        return pieList
     }
 }

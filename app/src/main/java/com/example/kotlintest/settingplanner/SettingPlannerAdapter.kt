@@ -44,7 +44,6 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
 
     fun addAll(data: List<Home_DTO>) {
         this.items = ArrayList(data)
-        this.notifyDataSetChanged()
     }
 
 //    @SuppressLint("ClickableViewAccessibility")
@@ -93,10 +92,10 @@ class SettingPlannerAdapter : RecyclerView.Adapter<SettingPlannerAdapter.Setting
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingPlannerViewHolder {
         _binding = SettingplannerListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 //        mContext = binding.root.context
-        return SettingPlannerViewHolder(binding.root)
+        return SettingPlannerViewHolder(binding)
     }
 
-    inner class SettingPlannerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class SettingPlannerViewHolder(val binding: SettingplannerListviewBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(starttime: String, endtime: String, task: String) {
             binding.starttime = starttime
             binding.endtime = endtime

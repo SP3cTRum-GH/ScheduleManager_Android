@@ -24,39 +24,39 @@ class HomeSharedAdapter(context: Context,
                         piechart: PieChart){
     var mContext: Context
     var piechart: PieChart
-    var data: HomeDataStructure
+    lateinit var viewModel: HomeVM
 
     init {
         mContext = context
         this.piechart = piechart
-        data = HomeDataStructure()
     }
     constructor(context: Context, piechart: PieChart, viewModel: HomeVM)
-            : this(context, HomeCalListAdapter(context,viewModel), HomeTodoAdapter(context,viewModel), piechart)
+            : this(context, HomeCalListAdapter(context,viewModel), HomeTodoAdapter(context,viewModel), piechart){
+                this.viewModel = viewModel
+            }
 
     fun setHomelist(home: List<Home_DTO>) {
-        data.homelist = home
+        viewModel.setPieItems(home)
         updatePieChart()
     }
 
     fun setCallist(cal: List<Calendar_DTO>) {
-        data.callist = cal
-        setAdapter()
+        listAdapter.items = cal
+        listAdapter.notifyDataSetChanged()
     }
 
     fun setTodolist(todo: List<TodoList_DTO>) {
-        data.todolist = todo
-        setAdapter()
+        todoAdapter.items = todo
+        todoAdapter.notifyDataSetChanged()
     }
 
     private fun updatePieChart() {
-        data.setPieItems()
-        val dataSet = PieDataSet(data.pieList, "")
+        val dataSet = PieDataSet(viewModel.pieList, "")
         val pieData = PieData(dataSet)
         pieData.setValueTextSize(0f)
 
-        if(data.homelist.isNotEmpty()) {
-            val min = data.homelist[0].starttime
+        if(viewModel.planitem.value!!.isNotEmpty()) {
+            val min = viewModel.planitem.value!![0].starttime
 
             piechart.rotationAngle = -90f + (min * 0.25f)
         }
@@ -67,16 +67,5 @@ class HomeSharedAdapter(context: Context,
         piechart.setEntryLabelColor(Color.BLACK)
         piechart.invalidate()
 
-    }
-    private fun setAdapter() {
-        listAdapter.items = data.callist
-        todoAdapter.items = data.todolist
-
-        allNotify()
-    }
-
-    private fun allNotify() {
-        listAdapter.notifyDataSetChanged()
-        todoAdapter.notifyDataSetChanged()
     }
 }
