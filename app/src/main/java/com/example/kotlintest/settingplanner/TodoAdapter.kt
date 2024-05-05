@@ -56,6 +56,7 @@ class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoListViewHolder> {
 //
 //        return itemView
 //    }
+
 override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
     var currentItem = items[position]
 

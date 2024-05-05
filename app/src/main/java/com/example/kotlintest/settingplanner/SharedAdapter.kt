@@ -56,7 +56,6 @@ class SharedAdapter(context: Context,
             piechart.isRotationEnabled = false
             piechart.data = pieData
             piechart.legend.isEnabled = false
-
             piechart.setEntryLabelColor(Color.BLACK)
 
             piechart.invalidate()
